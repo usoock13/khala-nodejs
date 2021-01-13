@@ -1,0 +1,140 @@
+
+.khala-setting {
+    height: 100vh;
+    padding-top: 10.4rem;
+    font-family: "noto sans kr";
+    background-color: #eee;
+    box-sizing: border-box;
+}
+.khala-setting-wrap {
+    width: 68.5rem;
+    /* height: calc(100% - 6rem); */
+    margin: 0 auto;
+    padding: 3rem 5rem;
+    background-color: rgba(255, 255, 255, .88);
+    box-sizing: border-box;
+}
+.khala-setting-title {
+    color: var(--khala-point-color);
+    font-size: 2.3rem;
+    font-weight: 700;
+    text-align: right;
+}
+.khala-setting-list {
+    padding: 1.5rem 0;
+}
+.khala-setting-item {
+    margin-top: 5.5em;
+}
+[name="khala-setting-name"] {
+    border: .2rem solid #999;
+    padding: 0.5rem;
+    border-radius: .5rem;
+}
+.khala-setting-item>h6 {
+    margin-bottom: 0.4em;
+    font-size: 1.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #434343;
+}
+.khala-setting-item>h6>small {
+    font-size: 0.7em;
+    font-weight: 200;
+}
+.khala-setting-language {
+    position: relative;
+}
+.khala-setting-language>p {
+    width: calc(45rem / 3);
+    padding: 1.5rem 2rem;
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: 500;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: var(--khala-point-color);
+    cursor: pointer;
+}
+.khala-setting-language>ul {
+    /* background-color: #ccc; */
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 45rem;
+    overflow: hidden;
+}
+.khala-setting-language.active>ul {
+    display: block;
+}
+.khala-setting-language>ul>li {
+    width: calc(100% / 3);
+    padding: 1.5rem 2rem;
+    color: #454545;
+    font-size: 1.7rem;
+    font-weight: 300;
+    text-align: center;
+    background-color: var(--khala-background-color);
+    box-sizing: border-box;
+    cursor: pointer;
+    float: left;
+}
+.khala-setting-language>ul>li:hover {
+    color: #fff;
+    font-weight: 500;
+    background-color: var(--khala-point-color);
+}
+.khala-setting-avatar ul {}
+.khala-setting-avatar li {
+    position: relative;
+    display: inline-block;
+    width: 6.5rem;
+    height: 6.5rem;
+    margin: 0 .3rem;
+    border-radius: 50%;
+    overflow: hidden;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.khala-setting-avatar li.select::after,
+.khala-setting-avatar li:hover::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: .4rem solid rgba(83, 91, 157, 1);
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+.khala-setting-avatar li img {
+    width: 100%;
+}
+.khala-setting-buttons {
+    margin-top: 10rem;
+}
+.khala-setting-buttons li {
+    display: inline-block;
+}
+.khala-setting-buttons button {
+    display: inline-block;
+    padding: .8rem 1.8rem;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 500;
+    font-family: noto sans kr;
+    border: none;
+    background: none;
+    background-color: var(--khala-point-color);
+    border-radius: 1rem;
+    box-shadow: 0.2rem 0.2rem 0.3rem rgba(0, 0, 0, .15);
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.khala-setting-createRoom {
+    float: right;
+}
+.khala-setting-createRoom button {
+    background-color: var(--khala-sub-color);
+}

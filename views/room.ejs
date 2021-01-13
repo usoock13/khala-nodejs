@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<%- include('head.html') %> 
+	<jsp:include page="/head.html"></jsp:include>
+	<link rel="stylesheet" href="room.css">
+	<title>K H A L A - Room</title>
+</head>
+<script>
+	// 쿠키정보 미존재시 세팅페이지로 연결
+	$(function () {
+		console.log(getCookie('khala-config'));
+		if (!getCookie('khala-config')) {
+			if (getParam('room-no')){
+				document.location.href = '/setting?room-no='+getParam('room-no');
+			} else {
+				document.location.href = '/setting';
+			}
+		}
+
+		function getCookie(cookieName) {
+			var cookieValue = null;
+			if (document.cookie) {
+				var array = document.cookie.split((escape(cookieName) + '='));
+				if (array.length >= 2) {
+					var arraySub = array[1].split(';');
+					cookieValue = unescape(arraySub[0]);
+				}
+			}
+			return cookieValue;
+		}
+		function getParam(sname) {
+			var params = location.search.substr(location.search.indexOf("?") + 1);
+			var sval = "";
+			params = params.split("&");
+			for (var i = 0; i < params.length; i++) {
+				temp = params[i].split("=");
+				if ([temp[0]] == sname) { sval = temp[1]; }
+			}
+			return sval;
+		}
+	})
+</script>
+<script src="room.js"></script>
+
+<body>
+    <%- include('header') %>
+	<div class="khala-container">
+		<section class="khala-userarea">
+			<div class="khala-userarea-header">
+				<span class="khala-user-number"></span>
+			</div>
+			<div class="khala-userarea-body">
+				<ul class="khala-userlist">
+					
+				</ul>
+			</div>
+		</section>
+		<section class="khala-chat">
+			<div class="khala-chat-header">
+				<p class="khala-chat-url">
+					<span>-</span>
+					<button class="khala-urlcopy">copy</button>
+				</p>
+			</div>
+			<div class="khala-chat-redirection">
+				<ul class="khala-redirection-list">
+
+				</ul>
+			</div>
+			<div class="khala-chat-input">
+				<form class="khala-input-form">
+					<textarea class="khala-input-text" name="text"></textarea>
+					<div class="khala-input-buttonWrap">
+						<input id="khala-text-submit" type="submit" value="send">
+					</div>
+				</form>
+			</div>
+		</section>
+	</div>
+</body>
+
+</html>

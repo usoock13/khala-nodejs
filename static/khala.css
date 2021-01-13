@@ -1,0 +1,113 @@
+:root {
+    --khala-point-color: #535B9D;
+    --khala-sub-color: #11B0AB;
+    --khala-background-color: #F3F5FA;
+    --khala-basic-font-family: nanum gothic;
+    
+    font-size: 0.52083333333333vw;
+    font-family: var(--khala-basic-font-family);
+}
+@media (min-width: 499px) {
+    :root {
+        font-size: 10px;
+    }
+}
+input,
+button,
+textarea {
+    resize: none;
+    outline: none;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: var(--khala-background-color);
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  #khala-header {
+    position: fixed;
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 2.5rem;
+    background-color: #fff;
+    z-index: 5;
+  }
+  #khala-logo {
+    position: relative;
+    display: inline-block;
+    z-index: 13;
+  }
+  #khala-logo::before {
+    content: "";
+    transition: opacity 300ms ease;
+    position: absolute;
+    top: -0.2rem; left: -0.2rem;
+    display: inline-block;
+    width: calc(100% + .4rem);
+    height: calc(100% + .4rem);
+    background: linear-gradient(to right, var(--khala-point-color), var(--khala-sub-color) 50%);
+    border-radius: .74rem;
+    opacity: 0;
+    z-index: 28;
+  }
+  #khala-logo:hover::before {
+    opacity: 0.55;
+  }
+  #khala-logo a {
+    position: relative;
+    display: inline-block;
+    height: 4.2rem;
+    padding: .5rem .8rem .7rem .7rem;
+
+    color: #535B9D;
+    font-size: 1.3rem;
+    font-weight: 900;
+    font-family: noto sans kr;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    line-height: 4.2rem;
+    background-color: #fff;
+    border-radius: .5rem;
+    z-index: 29;
+  }
+  #khala-logo a span {
+    vertical-align: middle;
+  }
+  #khala-logo a img {
+    height: 4.2rem;
+    vertical-align: middle;
+  }
+
+  .sign-buttons {
+    width: 30%;
+    float: right;
+  }
+  .sign-buttons li {
+    display: inline-block;
+    padding: 1.9rem 1.1rem;
+  }
+  .sign-buttons li>a {
+    color: #525252;
+    font-size: 1.3rem;
+    font-weight: 300;
+    text-decoration: none;
+  }
+  .sign-buttons li>a:hover {
+    color: var(--khala-point-color);
+    text-decoration: underline;
+  }

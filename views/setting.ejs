@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <%- include('head.html') %>
+    <link rel="stylesheet" href="setting.css">
+    <title>K H A L A - Setting</title>
+</head>
+<script src="/setting.js"></script>
+<body>
+    <%- include('header') %>
+    <section class="khala-setting">
+        <div class="khala-setting-wrap">
+            <h5 class="khala-setting-title">setting</h5>
+            <ul class="khala-setting-list">
+                <li class="khala-setting-item">
+                    <h6>닉네임 <small>Nickname</small></h6>
+                    <input type="text" name="khala-setting-name">
+                </li>
+                <li class="khala-setting-item">
+                    <h6>언어 <small>Language</small></h6>
+                    <div class="khala-setting-language">
+                        <p class="khala-setting-language-selected" data-lang="ko">한국어</p>
+                        <ul>
+                            <li data-lang="ko">한국어</li>
+                            <li data-lang="en">English</li>
+                            <li data-lang="ja">日本語</li>
+                            <li data-lang="zh-CN">中国語-簡体</li>
+                            <li data-lang="zh-TW">中国語-繁体</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="khala-setting-item">
+                    <h6>아바타 <small>Avatar</small></h6>
+                    <div class="khala-setting-avatar">
+                        <ul>
+                            <li class="select"><img src="/image/avatar/avatar00.jpg"></li>
+                            <li><img src="/image/avatar/avatar01.jpg" alt="khala-avatar"></li>
+                            <li><img src="/image/avatar/avatar02.jpg" alt="khala-avatar"></li>
+                            <li><img src="/image/avatar/avatar03.jpg" alt="khala-avatar"></li>
+                            <li><img src="/image/avatar/avatar04.jpg" alt="khala-avatar"></li>
+                            <li><img src="/image/avatar/avatar05.jpg" alt="khala-avatar"></li>
+                            <li><img src="/image/avatar/avatar06.jpg" alt="khala-avatar"></li>
+                            <li><img src="/image/avatar/avatar07.jpg" alt="khala-avatar"></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <ul class="khala-setting-buttons">
+                <li class="khala-setting-apply">
+                    <button>save</button>
+                </li>
+                <li class="khala-setting-cancel">
+                    <button>cancel</button>
+                </li>
+                <li class="khala-setting-createRoom">
+                    <button>join to chat-room <small>▶</small> </button>
+                </li>
+            </ul>
+        </div>
+    </section>
+</body>
+</html>

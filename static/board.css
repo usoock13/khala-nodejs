@@ -1,0 +1,359 @@
+#khala-header {
+    background-color: rgba(255, 255, 255, .12);
+}
+#khala-header:hover {
+    background-color: rgba(255, 255, 255, .17);
+}
+#khala-logo a {
+    color: #fff;
+    padding: .5rem .8rem .5rem .7rem;
+    background: none;
+}
+#khala-logo::before {
+    background: none;
+}
+#khala-logo:hover::before {
+    background: none;
+    border: .2rem solid #fff;
+}
+.sign-buttons {
+    color: rgba(255, 255, 255, .88);
+    font-size: 1.2rem;
+}
+.sign-buttons li>a {
+    color: rgba(255, 255, 255, .88);
+}
+.sign-buttons li>a:hover {
+    color: rgba(255, 255, 255, 1);
+}
+/* << Khala header 설정 변경 */
+body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: overlay;
+    width: 100vw;
+}
+::-webkit-scrollbar-track {
+    background: none;
+}
+::-webkit-scrollbar-track-piece {
+    background: none;
+  }
+/* << change Khala root setting */
+
+.khala-board-container {
+    min-height: 100vh;
+    padding-top: 7.5rem;
+    padding-bottom: 25rem;
+    background: linear-gradient(to left bottom, rgba(17, 176, 171, .85), rgba(83, 91, 157, .85));
+}
+.khala-board-list {
+    max-width: 1200px;
+    width: 100%;
+    padding-top: 5.5rem;
+    margin: 0 auto;
+}
+.loading-icon {
+    text-align: center;
+}
+.loading-icon i {
+    transition: opacity 400ms ease, margin 400ms ease;
+    display: inline-block;
+    color: #fff;
+    font-size: 5rem;
+    vertical-align: top;
+    animation: spin 3000ms ease infinite;
+}
+.khala-board-list.act .loading-icon i {
+    margin-top: -6rem;
+    opacity: 0;
+}
+.khala-board-list.act .loading-icon.act i {
+    position: fixed;
+    bottom: 15%;
+    margin-bottom: 0;
+    opacity: 1;
+}
+.grid-sizer {
+    width: calc(100% / 3 - 15px);
+}
+.khala-board-item {
+    transition: background-color 250ms ease, top 250ms ease, left 250ms ease;
+    display: inline-block;
+    width: calc(100% / 3 - 15px);
+    padding: 1.5rem 2rem 2rem;
+    margin-bottom: 1.5rem;
+    font-family: noto sans kr;
+    background-color: rgba(83, 91, 157, .65);
+    background-color: rgba(255, 255, 255, .76);
+    border-radius: 1rem;
+    box-sizing: border-box;
+    opacity: 0;
+}
+.khala-board-list.act .khala-board-item {
+    /* cursor: pointer; */
+    margin-top: 0;
+    animation: fadeInUp 650ms ease forwards;
+}
+.khala-board-list.act .khala-board-item:hover {
+    background-color: rgba(255, 255, 255, .92);
+}
+
+.board-item-head {
+    padding-top: 1.4rem;
+    padding-bottom: 2.5rem;
+    border-bottom: .1rem solid rgba(0, 0, 0, .13);
+}
+.board-item-contents {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5em;
+    background-color: rgba(0, 0, 0, .05);
+    border: .1rem solid rgba(0, 0, 0, .13);
+    border-radius: .5rem;
+    box-sizing: border-box;
+}
+.board-item-foot {
+    display: flex;
+    padding: 2.5rem 0 1rem;
+    align-items: center;
+}
+
+
+.board-item-title {
+    color: #4c4c4c;
+    font-size: 1.9em;
+    font-weight: 800;
+    word-break: break-all;
+    letter-spacing: -.1rem;
+}
+.board-item-title input[type="text"] {
+    display: block;
+    width: calc(100% - 1rem);
+    height: 2.9rem;
+    padding: 1rem 1rem;
+    margin: 1rem auto;
+    font-family: noto sans kr;
+    font-size: 1.9rem;
+    font-weight: 900;
+    letter-spacing: -.1rem;
+    word-break: break-all;
+    border: none;
+    background-color: rgba(199, 199, 199, .2);
+    box-shadow: 0 0 0.5rem rgba(66, 66, 66, .4);
+    box-sizing: border-box;
+    border-radius: .7rem;
+}
+.board-item-created {
+    display: inline-block;
+    width: 100%;
+    padding-top: .8rem;
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: #787878;
+    text-align: right;
+}
+/* << Board item header CSS */
+
+.khala-board-addform form {
+    height: 0;
+    overflow: hidden;
+}
+.khala-board-list.act .khala-board-addform.act {
+    animation: anchor 350ms ease !important;
+    opacity: 1;
+}
+.khala-board-list.act .khala-board-addform.act form {
+    height: auto;
+    opacity: 1;
+}
+.khala-board-addform .addform-text {
+    display: inline-block;
+    width: 100%;
+    padding: 1.5rem 0 3rem;
+    color: #767676;
+    font-family: abel;
+    font-size: 1.9rem;
+    text-align: center;
+    box-sizing: border-box;
+}
+.khala-board-addform.act .addform-text {
+    padding-bottom: 1.5rem;
+}
+.khala-board-addform .addform-login,
+.khala-board-addform .addform-active {
+    transition: background-position 250ms ease, background-size 250ms ease, opacity 250ms ease;
+    display: block;
+    width: 11rem;
+    margin: 0 auto;
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: 400;
+    font-family: museomoderno;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 1.9rem;
+    line-height: 3.8rem;
+    border: none;
+    background: linear-gradient(to right, var(--khala-point-color), var(--khala-sub-color) 70%);
+    background-size: 100% 100%;
+    background-position: 0 0;
+    opacity: .65;
+    box-shadow: -.6rem .6rem .9rem rgba(0, 0, 0, .27);
+    cursor: pointer;
+    
+}
+textarea.board-item-text::-webkit-scrollbar {
+    display: none;
+  }
+.khala-board-addform .addform-active:hover {
+    background-size: 150% 100%;
+    background-position: 50% 0;
+    animation: bounce 400ms ease forwards;
+    opacity: 1;
+}
+/* << Board item Addform CSS */
+
+.board-item-text {
+    color: #3a3a3a;
+    font-size: 1.5rem;
+    line-height: 1.45;
+}
+textarea.board-item-text {
+    width: 100%;
+    height: 2.9rem;
+    color: #3a3a3a;
+    font-family: noto sans kr;
+    line-height: 1.45;
+    border: none;
+    background: none;
+    overflow: visible;
+    overflow-x: hidden;
+    word-break: break-all;
+}
+
+.board-item-writer {
+    padding-bottom: .4rem;
+    color: #565656;
+    font-size: 1.6rem;
+    font-weight: 800;
+    float: left;
+    vertical-align: middle;
+}
+.board-item-post,
+.board-item-delete {
+    transition: background-position 250ms ease, background-size 250ms ease, opacity 250ms ease;
+    display: block;
+    width: 8rem;
+    margin: 0 auto;
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: 400;
+    font-family: museomoderno;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 1.9rem;
+    line-height: 3.8rem;
+    border: none;
+    background: linear-gradient(to right, var(--khala-point-color), var(--khala-sub-color) 70%);
+    background-size: 100% 100%;
+    background-position: 0 0;
+    opacity: .65;
+    box-shadow: -.6rem .6rem .9rem rgba(0, 0, 0, .27);
+    cursor: pointer;
+}
+.board-item-post:hover{
+    background-size: 150% 100%;
+    background-position: 50% 0;
+    animation: bounce 400ms ease forwards;
+    opacity: 1;
+}
+.board-item-delete {
+    transition: color 250ms ease, border-color 250ms ease;
+    margin: 0 0 0 auto;
+    color: rgba(0, 0, 0, .65);
+    font-weight: 700;
+    background: none;
+    background-color: #fff;
+    border: .3rem solid rgba(0, 0, 0, .4);
+    border-radius: 2.2rem .4rem .4rem 2.2rem;
+    box-sizing: border-box;
+    box-shadow: -.3rem .3rem .6rem rgba(0, 0, 0, .17);;
+}
+.board-item-delete:hover {
+    color: #da2121;
+    border-color: #da2121;
+}
+.board-item-delete:active {
+    animation: anchor 400ms ease forwards;
+}
+
+h2.board-notice-runout {
+    width: 100%;
+    margin: 13rem 0;
+    color: #fff;
+    font-size: 5.5rem;
+    font-weight: 100;
+    font-family: 'Abel';
+    text-align: center;
+    animation: fadeInUp 400ms ease forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(11rem);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: .965;
+    }
+}
+
+@keyframes fadeInOut {
+    0% {
+        transform: translateY();
+        opacity: .965;
+    }
+    100% {
+        transform: translateY(-11rem);
+        opacity: 0;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(1.00);
+        box-shadow: -6px 6px 9px rgba(0, 0, 0, .27);
+    }
+    33% {
+        transform: scale(1.05);
+        box-shadow: -9px 9px 12px rgba(0, 0, 0, .27);
+    }
+    100% {
+        transform: scale(1.00);
+        box-shadow: -6px 6px 9px rgba(0, 0, 0, .27);
+    }
+}
+
+@keyframes anchor {
+    0% {
+        transform: translateY(0);
+    }
+    33% {
+        transform: translateY(.5rem);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

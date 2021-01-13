@@ -1,0 +1,82 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(to right bottom, var(--khala-point-color), var(--khala-sub-color));
+}
+.khala-signup-container {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, .15);
+    justify-content: center;
+    align-items: center;
+}
+.khala-signupform-wrap {
+    padding: 3.6em 2rem;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .77);
+    border-radius: 2rem;
+}
+.khala-signup-greeting {
+    color: rgba(0, 0, 0, .55);
+    font-size: 2.1rem;
+    font-weight: 100;
+    font-family: 'abel';
+    letter-spacing: -.05rem;
+    padding: .8rem 0 1.9rem;
+}
+.khala-signupform input {
+    display: block;
+    padding: 1rem 1.5rem;
+    margin: 2rem auto;
+    border: none;
+    background-color: rgba(199, 199, 199, .2);
+    box-shadow: 0 0 0.5rem rgba(66, 66, 66, .4);
+    border-radius: .7rem;
+}
+.khala-signupform .khala-signup-cancle,
+.khala-signupform input[type="submit"] {
+    transition: background-size 250ms ease,
+                background-position 250ms ease;
+    display: inline-block;
+    width: 9.5rem;
+    height: 4.2rem;
+    color: #fff;
+    font-size: 1.7rem;
+    font-family: abel;
+    border-radius: 2.1rem .3rem .3rem 2.1rem;
+    box-sizing: border-box;
+    border: none;
+    background: none;
+    background: linear-gradient(to right, var(--khala-point-color), var(--khala-sub-color) 70%);
+    background-size: 100% 100%;
+    background-position: 0 0;
+    cursor: pointer;
+}
+.khala-signupform input[type="submit"] {
+    transition: background-size 250ms ease,
+                background-position 250ms ease;
+                background: linear-gradient(to left, var(--khala-point-color), var(--khala-sub-color) 70%);
+    border-radius: .3rem 2.1rem 2.1rem .3rem;
+}
+.khala-signupform input[type="submit"]:hover,
+.khala-signupform .khala-signup-cancle:hover {
+    background-size: 150% 100%;
+    background-position: 50% 0;
+    animation: bounce 400ms ease forwards;
+    opacity: 1;
+}
+
+
+@keyframes bounce {
+  0% {
+      transform: scale(1.00);
+}
+  33% {
+      transform: scale(1.05);
+  }
+  100% {
+      transform: scale(1.00);
+  }
+}

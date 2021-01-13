@@ -1,0 +1,150 @@
+#khala-header {
+    top: 0;
+    box-shadow: .5rem .5rem 1.5rem rgba(0, 0, 0, .08);
+}
+.khala-guide-container {
+    padding-top: 7.5rem;
+    padding-bottom: 25.5rem;
+}
+.khala-guide-wrap {
+    width: 100%;
+    overflow: hidden;
+}
+.khala-guide-contents {
+    width: 68%;
+    background: rgba(252, 252, 252, 1);
+    float: left;
+}
+.guide-contents-wrap {
+    width: 75%;
+    padding-right: 15rem;
+    margin-right: 0;
+    margin-left: auto;
+    box-sizing: border-box;
+}
+
+
+/* Article Itme CSS */
+.guide-article {
+    display: inline-block;
+    width: 100%;
+    margin: 5rem 0;
+    font-family: noto sans kr;
+}
+.guide-article-title {
+    margin: 1.5rem 0;
+    color: var(--khala-point-color);
+    font-size: 4.9rem;
+    font-weight: 600;
+}
+.guide-article-subtitle {
+    display: inline-block;
+    width: 100%;
+    margin: 2rem 0 1rem;
+    color: #232323;
+    font-size: 2.2rem;
+    font-weight: 500;
+}
+.guide-article-text {
+    display: inline-block;
+    width: 100%;
+    margin: 2.2rem 0 4rem;
+    color: #454545;
+    font-size: 1.7rem;
+    font-weight: 300;
+    line-height: 1.65;
+}
+.guide-article-list {
+    margin: 0 3rem 2rem 3rem;
+    color: #555;
+    font-size: 1.6rem;
+    list-style: square;
+    line-height: 1.3;
+    word-break: keep-all;
+}
+.guide-article-list li {
+    margin-bottom: 1rem;
+}
+.guide-article-text a {
+    color: rgb(27, 27, 63);
+    background-color: rgb(214, 239, 255);
+    text-decoration: underline;
+}
+.guide-article-text b {
+    font-weight: 500;
+}
+.guide-article-reference {
+    position: relative;
+    padding: 2rem 3.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--khala-point-color);
+    font-size: 1.6rem;
+    line-height: 1.45;
+    background-color: rgba(17, 176, 171, .23);
+}
+.guide-article-reference b {
+    font-weight: 500;
+}
+.guide-article-reference::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 1rem;
+    height: 100%;
+    background-color: rgba(17, 176, 171, .55);
+}
+.guide-article .imgbox {
+    display: inline-block;
+    /* max-width: 70%; */
+    margin: 1.5rem 1rem 3rem;
+    box-shadow: .3rem .3rem 1rem rgba(0, 0, 0, .15);
+    overflow: hidden;
+}
+.guide-article .imgbox img {
+    /* width: 100%; */
+    float: left;
+}
+
+/* Index CSS Area */
+.khala-guide-index {
+    position: fixed;
+    top: 0; right: 0;
+    display: flex;
+    width: 32%;
+    height: 100vh;
+    padding-left: 6rem;
+    box-sizing: border-box;
+    background-color: var(--khala-background-color);
+    justify-content: center;
+    align-items: center;
+    float: left;
+    z-index: 3;
+}
+.guide-index-list {
+    width: 75%;
+    height: 65%;
+    padding-left: 2.5rem;
+    margin-left: 0;
+    margin-right: auto;
+    color: #292929;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.75;
+    box-sizing: border-box;
+    border-left: 0.1rem solid rgba(0, 0, 0, 0.15);
+}
+.guide-index-item {
+    margin-top: 2rem;
+}
+.guide-index-item a {
+    display: inline-block;
+    padding-left: 1rem;
+    color: var(--khala-point-color);
+    font-size: 1.6rem;
+    font-weight: 200;
+    text-decoration: none;
+}
+.guide-index-item a:hover {
+    text-decoration: underline;
+}

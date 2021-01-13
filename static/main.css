@@ -1,0 +1,236 @@
+body {
+    height: 100vh;
+    font-family: noto sans kr;
+    background-color: #000;
+}
+.background-cover {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: linear-gradient(to right bottom, #535B9D 0%, #11B0AB 100%);
+    opacity: .78;
+}
+.khala-intro {
+    padding-top: 7.4rem;
+}
+.khala-intro .intro-wrap {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 18rem;
+    width: 100%;
+    overflow: hidden;
+}
+.khala-intro-text {
+    width: 50%;
+    padding-top: 4.5rem;
+    padding-right: 3.5rem;
+    font-family: noto sans kr;
+    text-align: right;
+    float: left;
+    box-sizing: border-box;
+}
+.khala-intro-text h1 {
+    margin-bottom: 2rem;
+    color: #11B0AB;
+    font-size: 4.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: right;
+    letter-spacing: .8rem;
+    opacity: .75;
+}
+
+.khala-intro-text p {
+    margin-bottom: 2.7rem;
+    color: rgba(255, 255, 255, .88);
+    font-size: 2rem;
+    font-weight: 200;
+    text-align: right;
+    line-height: 1.4;
+    letter-spacing: -1px;
+    text-shadow: 0 0 3px rgba(0, 0, 0, .16);
+}
+.khala-intro-button a ,
+.khala-intro-guide .guide-wrap a {
+    transition: background-position 250ms ease, background-size 250ms ease, opacity 250ms ease;
+    display: inline-block;
+    width: 14rem;
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: 400;
+    font-family: museomoderno;
+    text-decoration: none;
+    border-radius: .6rem 2.6rem 2.6rem .6rem;
+    text-align: center;
+    line-height: 46px;
+    background: linear-gradient(to right, var(--khala-point-color), var(--khala-sub-color) 70%);
+    background-size: 100% 100%;
+    background-position: 0 0;
+    opacity: .65;
+    box-shadow: -6px 6px 9px rgba(0, 0, 0, .27);
+}
+.khala-intro-button a:hover,
+.khala-intro-guide .guide-wrap a:hover {
+    background-size: 150% 100%;
+    background-position: 50% 0;
+    animation: bounce 400ms ease forwards;
+    opacity: 1;
+}
+.khala-intro-setting {
+    padding-top: .8rem;
+    padding-right: 2.3rem;
+    text-align: right;
+}
+.khala-intro-setting a {
+    position: relative;
+    display: inline-block;
+    margin-top: .4rem;
+    color: rgba(255, 255, 255, .88);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: -.05rem;
+}
+.khala-intro-setting a::after {
+    content: "";
+    transition: width 250ms ease, left 250ms ease, opacity 250ms ease;
+    position: absolute;
+    top: 115%; left: 50%;
+    display: block;
+    width: 0;
+    height: 2px;
+    background-color: rgba(255, 255, 255, .88);
+    opacity: 0;
+}
+.khala-intro-setting a:hover::after {
+    left: 0;
+    width: 100%;
+    opacity: 1;
+}
+.khala-intro-setting a i {
+    transition: transform 500ms ease;
+    transform: rotate(0);
+}
+.khala-intro-setting a:hover i {
+    transform: rotate(180deg);
+}
+.khala-intro-image {
+    position: relative;
+    width: 50%;
+    float: left;
+}
+.khala-intro-image .intro-image-item {
+    position: absolute;
+    width: 42.3rem;
+    height: 48rem;
+    transform: perspective(200rem);
+}
+.khala-intro-image .intro-image-item:nth-of-type(1) {
+    top: 0; left: 0;
+    z-index: 2;
+    animation: flow 4000ms ease infinite;
+}
+.khala-intro-image .intro-image-item:nth-of-type(2) {
+    top: 0; left: 0;
+    z-index: 1;
+    animation: flow 4000ms ease infinite;
+}
+.khala-intro-image .intro-image-item:nth-of-type(3) {
+    top: 0; left: 0;
+    z-index: 4;
+    animation: flow 4500ms ease infinite;
+}
+.khala-intro-image .intro-image-item:nth-of-type(4) {
+    top: 0; left: 0;
+    z-index: 3;
+    animation: flow 5000ms ease infinite;
+}
+.khala-intro-image .intro-image-item img {
+    width: 42.3rem;
+    vertical-align: middle;
+}
+.khala-intro-image .intro-image-item.shadow img,
+.khala-intro-image .intro-image-item.contents img {
+    transition: top 1000ms ease, left 1000ms ease, opacity 1000ms ease;
+    position: absolute;
+    top: 1rem; left: 0;
+    opacity: 0;
+}
+.khala-intro-image .intro-image-item.shadow img.act,
+.khala-intro-image .intro-image-item.contents img.act {
+    opacity: 1;
+    top: 0; left: 0;
+}
+/* << Khala Intro CSS */
+
+
+
+.khala-intro-guide {
+    min-width: 1280px;
+    width: 100%;
+}
+.khala-intro-guide .guide-wrap {
+	max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: center;
+}
+.khala-intro-guide .guide-wrap h2 {
+    margin-top: 3.2rem;
+    margin-bottom: 3rem;
+    color: rgba(255, 255, 255, .88);
+    font-size: 2.7rem;
+    font-weight: 100;
+    font-family: noto sans kr;
+    vertical-align: middle;
+}
+.khala-intro-guide .guide-wrap h2 b {
+    font-weight: 900;
+    font-size: 3.3rem;
+}
+.khala-intro-guide .guide-wrap p {
+    margin-bottom: 2.7rem;
+    color: rgba(255, 255, 255, .88);
+    font-size: 2rem;
+    font-weight: 200;
+    line-height: 1.4;
+    letter-spacing: -.1rem;
+    text-shadow: 0 0 .3rem rgba(0, 0, 0, .16);
+}
+.khala-intro-guide .guide-wrap a {
+	width: 12rem;
+	border-radius: 2.6rem 2.6rem 2.6rem 2.6rem;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(1.00);
+        box-shadow: -6px 6px 9px rgba(0, 0, 0, .27);
+  }
+    33% {
+        transform: scale(1.05);
+        box-shadow: -9px 9px 12px rgba(0, 0, 0, .27);
+    }
+    100% {
+        transform: scale(1.00);
+        box-shadow: -6px 6px 9px rgba(0, 0, 0, .27);
+    }
+  }
+
+@keyframes flow {
+    0% {
+        top: -.5rem;
+    }
+    50% {
+        top: .5rem;
+    }
+    100% {
+        top: -.5rem;
+    }
+}

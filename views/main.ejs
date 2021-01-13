@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <%- include('head.html') %>
+    <script src="/dynamicPosition.js"></script>
+    <script src="/particles.min.js"></script>
+    <script>
+        $(function () {
+            particlesJS.load('particles-js', 'particlesjs-config.json', function () {
+                console.log('callback - particles.js config loaded');
+            });
+        })
+    </script>
+    <link rel="stylesheet" href="main.css">
+    <title>K H A L A</title>
+</head>
+
+<body>
+    <div id="particles-js" class="background-cover"></div>
+    <%- include('header') %>
+    <section class="khala-intro">
+        <div class="intro-wrap">
+            <div class="khala-intro-text">
+                <h1>Khala</h1>
+                <p>
+                    <b>KHALA</b> is a multi-purpose chat web that allows you to <br />
+                    instantly translate and talk to foreigners. Through this, without <br />
+                    using a translator and can chat with foreigners in real time.
+                </p>
+                <div class="khala-intro-button khala-button">
+                    <a href="/create-room.jsp">create room</a>
+                </div>
+                <div class="khala-intro-setting">
+                    <a href="/setting">Setting <i class="fas fa-cog"></i></a>
+                </div>
+            </div>
+            <div class="khala-intro-image">
+                <div class="intro-image-item">
+                    <img src="/image/main/message-ex--frame.png" alt="">
+                </div>
+                <div class="intro-image-item frame">
+                    <img src="/image/main/message-ex--frame-shadow.png" alt="">
+                </div>
+                <div class="intro-image-item contents">
+                    <img class="image-item-ko act" src="/image/main/message-ex-ko-contents.png" alt="">
+                    <img class="image-item-en" src="/image/main/message-ex-en-contents.png" alt="">
+                    <img class="image-item-jp" src="/image/main/message-ex-jp-contents.png" alt="">
+                </div>
+                <div class="intro-image-item shadow">
+                    <img class="image-item-ko act" src="/image/main/message-ex-ko-shadow.png" alt="">
+                    <img class="image-item-en" src="/image/main/message-ex-en-shadow.png" alt="">
+                    <img class="image-item-jp" src="/image/main/message-ex-jp-shadow.png" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="khala-intro-guide">
+            <div class="guide-wrap">
+                <h2>New to <b>KHALA?</b></h2>
+                <p>It might help if you read the guide.</p>
+                <a href="/guide.jsp">guide</a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
