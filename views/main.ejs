@@ -5,13 +5,6 @@
     <%- include('head.html') %>
     <script src="/dynamicPosition.js"></script>
     <script src="/particles.min.js"></script>
-    <script>
-        $(function () {
-            particlesJS.load('particles-js', 'particlesjs-config.json', function () {
-                console.log('callback - particles.js config loaded');
-            });
-        })
-    </script>
     <link rel="stylesheet" href="main.css">
     <title>K H A L A</title>
 </head>
@@ -29,7 +22,7 @@
                     using a translator and can chat with foreigners in real time.
                 </p>
                 <div class="khala-intro-button khala-button">
-                    <a href="/create-room.jsp">create room</a>
+                    <a href="/create-room">create room</a>
                 </div>
                 <div class="khala-intro-setting">
                     <a href="/setting">Setting <i class="fas fa-cog"></i></a>
@@ -65,5 +58,10 @@
         </div>
     </section>
 </body>
+<script>
+    particlesJS.load('particles-js', 'particlesjs-config.json', function () {
+        console.log('callback - particles.js config loaded');
+    });
+</script>
 
 </html>
