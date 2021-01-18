@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<%- include('head.html') %> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="login.css">
+    <title>K H A L A - Login</title>
+</head>
+<body>
+	<%- include('header') %>
+	<div class="khala-login-container">
+		<div class="khala-loginform-wrap" style="padding-top: 20px;">
+			<h3 class="khala-login-greeting">Glad you're back!</h3>
+			<form id="khala-loginform" class="khala-loginform" action="loginAction.jsp" method="post">
+				<input type="text" name="id" placeholder="ID"/>
+				<input type="password" name="password" placeholder="PASSWORD"/>
+				<input type="submit" value="LOGIN " />
+			</form>
+			<a class="khala-login-signup" href="sign-up.jsp">New to KHALA?</a>
+		</div>
+	</div>
+</body>
+<script>
+    let loginForm = document.querySelector('#khala-loginform');
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'appalication/json',
+                'User-Id': loginForm.id.value,
+                'User-Password': loginForm.password.value,
+            },
+        })
+    })
+</script>
+</html>

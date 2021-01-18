@@ -3,9 +3,9 @@ $(function(){
     AvatarEvnet();
     $('.khala-setting-createRoom').click(function(){
         if(getParam('room-no')){
-            OnSubmit('/room.jsp?room-no='+getParam('room-no'));
+            OnSubmit('/room?room-no='+getParam('room-no'));
         } else {
-            OnSubmit('/create-room.jsp');
+            OnSubmit('/create-room');
         }
     })
     $('.khala-setting-apply').click(function(){

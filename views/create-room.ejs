@@ -1,14 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 	<meta charset="UTF-8">
 	<title>K H A L A - Create Room</title>
-	<jsp:include page="/head.html"></jsp:include>
 </head>
 <body>
 </body>
-<!-- 
 <script>
+	let config = getCookie('khala-config');
+	console.log(getCookie('khala-config'));
+	if(!getCookie('khala-config')){
+		if(getParam('room-no')){
+			document.location.href = '/setting?room-no=' + getParam('room-no');
+		} else {
+			document.location.href = '/setting';
+		}
+	} else {
+		fetch('/create-room', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				'userConfig': config
+			})
+		})
+		.then((res) => { return res.json(); })
+		.then(json => console.log(json));
+	}
+    function getCookie(name) {
+        var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return value? value[2] : null;
+    };
+	function getParam(sname) {
+		var params = location.search.substr(location.search.indexOf("?") + 1);
+		var sval = "";
+		params = params.split("&");
+		for (var i = 0; i < params.length; i++) {
+			temp = params[i].split("=");
+			if ([temp[0]] == sname) { sval = temp[1]; }
+		}
+		return sval;
+	}
+</script>
+
+<script>
+	/* 
 	$(function() {
 		var config = getCookie('khala-config');
 		console.log(getCookie('khala-config'));
@@ -36,20 +73,7 @@
 			document.location.href = '/room.jsp?room-no='+roomNumber;
 		}
 	})
-    function getCookie(name) {
-        var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return value? value[2] : null;
-    };
-	function getParam(sname) {
-		var params = location.search.substr(location.search.indexOf("?") + 1);
-		var sval = "";
-		params = params.split("&");
-		for (var i = 0; i < params.length; i++) {
-			temp = params[i].split("=");
-			if ([temp[0]] == sname) { sval = temp[1]; }
-		}
-		return sval;
-	}
+	 */
 </script>
- -->
+
 </html>
