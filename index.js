@@ -16,7 +16,7 @@ const ioSession = require('express-socket.io-session');
 const router = {
   main: require('./router/mainRouter'),
   room: require('./router/roomRouter').router,
-  createRoom: require('./router/create-room'),
+  createRoom: require('./router/createRoomRouter'),
   setting: require('./router/settingRouter'),
   login: require('./router/loginRouter'),
 }

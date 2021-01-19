@@ -23,10 +23,13 @@
 			},
 			body: JSON.stringify({
 				'userConfig': config
-			})
+			}),
 		})
-		.then((res) => { return res.json(); })
-		.then(json => console.log(json));
+		.then(res => {
+			location.href = res.url
+		});
+		// .then((res) => { return res.json(); })
+		// .then(json => console.log(json));
 	}
     function getCookie(name) {
         var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');

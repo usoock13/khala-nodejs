@@ -3,19 +3,70 @@ import express from 'express';
 const router = express.Router();
 const request = require('request');
 
+interface UserConfig {
+    nickname: string;
+    language: string;
+    avatar: number;
+}
+class User {
+    public nickname: string;
+    public language: string;
+    public avatar: number;
+    public session: string;
+
+    static allUsers: User[] = new Array<User>();
+
+    constructor(config: UserConfig){
+        console.log(config);
+        this.nickname = config.nickname;
+        this.language = config.language;
+        this.avatar = config.avatar;
+
+        do {
+            this.session = Number(new Date()) + ':' + Math.random().toString().split('.')[1];
+        } while(Number(this.session)===0 || User.GetUserForSession(this.session)!==null) {
+            this.session = Number(new Date()) + ':' + Math.random().toString().split('.')[1];
+        }
+    }
+    static GetUserForSession(session: string) {
+        this.allUsers.forEach(user => {
+            if(user.session === session) return user;
+        })
+        return null;
+    }
+}
+
 class Room {
     public roomNumber: number;
+    public users: User[] = new Array<User>();
+    static rooms: Room[] = new Array<Room>();
+
     constructor() {
         let number: number;
-        do number = Math.random();
-        while (number===0) number = Math.random();
+        do {
+            number = Math.random();
+        } while (number===0 || Room.GetRoomForRoomNumber(number)!==null ) {
+            number = Math.random();
+        }
 
         number = Number((number.toString()).split('.')[1]);
         this.roomNumber = number;
         console.log("Room is Created / room number : " + this.roomNumber);
     }
+    static GetRoomForRoomNumber(roomNumber: number) {
+        Room.rooms.forEach(room => {
+            if(room.roomNumber === roomNumber) return room;
+        });
+        return null;
+    }
     GetRoomNumber() : number {
         return this.roomNumber;
+    }
+    AddUser(user: User) {
+        this.users.push(user);
+    }
+    RemoveUser(session: string){
+        this.users = this.users.filter(user => user.session!==session);
     }
 }
 
@@ -58,15 +109,11 @@ function PapagoNow(params: any){
     })
 }
 
-let rooms: Room[] = new Array<Room>();
-
-function CreateRoom() {
-    // PapagoNow({
-    //     so: 'ko',
-    //     ta: 'en',
-    //     text: '파파고 나우 프로젝트',
-    // })
-    rooms.push(new Room());
+function CreateRoom(host: UserConfig): number {
+    let myRoom = new Room();
+    Room.rooms.push(myRoom);
+    // 생성된 roomNumber를 반환
+    return myRoom.GetRoomNumber();
 }
 
 module.exports = {
