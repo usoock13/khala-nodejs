@@ -1,15 +1,26 @@
+'use strict';
 
-function khalaChatRoom() {
-  
-    render() 
-      return (
-          <button onClick={() => this.setState({ liked: true })}>
-            Like
-          </button>
-        );
-    }
+function UserArea() {
+  return (
+    <div className="khala-userarea">
+      <div className="khala-userarea-header">
+        <span className="khala-user-number"></span>
+      </div>
+    </div>
+  )
+}
+
+function KhalaChatRoom() {
+  return (
+      <>
+        <UserArea />
+      </>
+    );
+}
 
 ReactDOM.render(
-    khalaChatRoom,
+    <>
+      <KhalaChatRoom />
+    </>,
     document.getElementById('khala-room-container')
 );
