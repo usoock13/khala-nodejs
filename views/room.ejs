@@ -3,44 +3,12 @@
 <head>
 	<%- include('head.html') %> 
 	<jsp:include page="/head.html"></jsp:include>
-	<link rel="stylesheet" href="room.css">
+	<!-- <link rel="stylesheet" href="room.css"> -->
 	<title>K H A L A - Room</title>
 </head>
 <body>
 	<%- include('header') %>
-	<div id="khala-room-container" class="khala-container">
-		<!-- <section class="khala-userarea">
-			<div class="khala-userarea-header">
-				<span class="khala-user-number"></span>
-			</div>
-			<div class="khala-userarea-body">
-				<ul class="khala-userlist">
-					
-				</ul>
-			</div>
-		</section>
-		<section class="khala-chat">
-			<div class="khala-chat-header">
-				<p class="khala-chat-url">
-					<span>-</span>
-					<button class="khala-urlcopy">copy</button>
-				</p>
-			</div>
-			<div class="khala-chat-redirection">
-				<ul class="khala-redirection-list">
-
-				</ul>
-			</div>
-			<div class="khala-chat-input">
-				<form class="khala-input-form">
-					<textarea class="khala-input-text" name="text"></textarea>
-					<div class="khala-input-buttonWrap">
-						<input id="khala-text-submit" type="submit" value="send">
-					</div>
-				</form>
-			</div>
-		</section> -->
-	</div>
+	<div id="khala-room-container" class="khala-container"></div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -85,5 +53,5 @@
 		}
 	})
 </script>
-<script src="/room-r.js" type="text/babel"></script>
+<script src="/room.js" type="text/babel"></script>
 </html>

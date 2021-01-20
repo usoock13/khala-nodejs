@@ -1,9 +1,12 @@
 .khala-container {
     display: block;
+    width: 100%;
+}
+.khala-room-wrap {
+    display: block;
     max-width: 90rem;
     width: 100%;
     margin: 0 auto;
-    /* margin-top: 3rem; */
     padding: 1.5rem;
     padding-top: 7.4rem;
     overflow: hidden;

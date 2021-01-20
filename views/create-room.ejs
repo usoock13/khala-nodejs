@@ -28,8 +28,6 @@
 		.then(res => {
 			location.href = res.url
 		});
-		// .then((res) => { return res.json(); })
-		// .then(json => console.log(json));
 	}
     function getCookie(name) {
         var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
@@ -45,38 +43,6 @@
 		}
 		return sval;
 	}
-</script>
-
-<script>
-	/* 
-	$(function() {
-		var config = getCookie('khala-config');
-		console.log(getCookie('khala-config'));
-		if (!getCookie('khala-config')) {
-			if (getParam('room-no')){
-				document.location.href = '/setting.jsp?room-no='+getParam('room-no');
-			} else {
-				document.location.href = '/setting.jsp';
-			}
-        }
-		var webSocket = new WebSocket(
-            "wss://khala-world.herokuapp.com/broadsocket/create-room");
-			 //"ws://localhost:8080/broadsocket/create-room");
-		webSocket.onopen = function(){
-			let data = JSON.stringify({
-				type: 'create-room',
-				config: config
-			})
-			console.log(data);
-			webSocket.send(data);
-		}
-		webSocket.onmessage = function(message){
-			let roomNumber = JSON.parse(message.data).path;
-			console.log('room number is ' + roomNumber);
-			document.location.href = '/room.jsp?room-no='+roomNumber;
-		}
-	})
-	 */
 </script>
 
 </html>
