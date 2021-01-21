@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -31,7 +42,7 @@ var Room = /** @class */ (function () {
         var number;
         do {
             number = Math.random();
-        } while (number === 0 || Room.GetRoomForRoomNumber(number) !== null);
+        } while (number === 0 || !!Room.GetRoomForRoomNumber(number));
         {
             number = Math.random();
         }
@@ -40,11 +51,7 @@ var Room = /** @class */ (function () {
         console.log("Room is Created / room number : " + this.roomNumber);
     }
     Room.GetRoomForRoomNumber = function (roomNumber) {
-        Room.rooms.forEach(function (room) {
-            if (room.roomNumber === roomNumber)
-                return room;
-        });
-        return null;
+        return Room.rooms.filter(function (room) { return room.roomNumber == roomNumber; })[0];
     };
     Room.prototype.GetRoomNumber = function () {
         return this.roomNumber;
@@ -58,28 +65,39 @@ var Room = /** @class */ (function () {
     Room.rooms = new Array();
     return Room;
 }());
+function CreateRoom() {
+    var myRoom = new Room();
+    // 생성된 방의 roomNumber를 선언
+    var roomNumber = myRoom.GetRoomNumber();
+    // return보다 rooms.push가 먼저 처리됨에 주의
+    Room.rooms.push(myRoom);
+    // 대입된 roomNumber를 반환
+    return roomNumber;
+}
 // /room GET 통신 Router >>
 router.get('/', function (req, res) {
     res.render('room', {
         name: 'usoock'
     });
+});
+router.post('/', function (req, res) {
+    res.render('room', {
+        name: 'usoock'
+    });
+    // console.log(req.get('Cookie'));
+    console.log(req.get('Content-Type'));
     console.log(req.get('Cookie'));
 });
 var iconv = require('iconv-lite');
 // room.ejs와 socket통신하는 모든 처리를 통괄
 var RoomSocket = function (io) {
     io.on('connection', function (socket) {
-        var nickname = JSON.parse(socket.handshake.cookies['khala-config']).nickname;
-        console.log(nickname);
-        var temp = iconv.encode(nickname, 'utf8');
-        console.log(iconv.decode(temp, 'win1251'));
-        // console.log(iconv.decode(iconv.encode('하마텍션디스크레인지럽스', 'utf-8'), 'utf8'));
-        // console.log( iconv.decode(temp, 'utf8') );
-        socket.emit('req', socket.handshake.cookies);
-        socket.on('res', function (data) {
-            // console.log(data);
+        socket.emit('require:userinfo', socket.id);
+        socket.on('send:userinfo', function (data) {
+            var userConfig = __assign(__assign({}, JSON.parse(JSON.parse(data).userConfig)), { session: socket.id });
+            Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber).AddUser(userConfig);
+            console.log(Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber));
         });
-        // socket.on('response userinfo', 'test');
     });
 };
 // 번역 REST API 통신
@@ -102,12 +120,6 @@ function PapagoNow(params) {
         console.dir("res : " + res);
         console.log("body : " + body);
     });
-}
-function CreateRoom(host) {
-    var myRoom = new Room();
-    Room.rooms.push(myRoom);
-    // 생성된 roomNumber를 반환
-    return myRoom.GetRoomNumber();
 }
 module.exports = {
     router: router,

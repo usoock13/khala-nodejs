@@ -42,7 +42,7 @@ class Room {
         let number: number;
         do {
             number = Math.random();
-        } while (number===0 || Room.GetRoomForRoomNumber(number)!==null ) {
+        } while (number===0 || !!Room.GetRoomForRoomNumber(number) ) {
             number = Math.random();
         }
 
@@ -51,10 +51,7 @@ class Room {
         console.log("Room is Created / room number : " + this.roomNumber);
     }
     static GetRoomForRoomNumber(roomNumber: number) {
-        Room.rooms.forEach(room => {
-            if(room.roomNumber === roomNumber) return room;
-        });
-        return null;
+        return Room.rooms.filter(room => room.roomNumber==roomNumber)[0];
     }
     GetRoomNumber() : number {
         return this.roomNumber;
@@ -67,11 +64,28 @@ class Room {
     }
 }
 
+function CreateRoom(): number /* 방번호 */ {
+    let myRoom = new Room();
+    // 생성된 방의 roomNumber를 선언
+    let roomNumber = myRoom.GetRoomNumber();
+    // return보다 rooms.push가 먼저 처리됨에 주의
+    Room.rooms.push(myRoom);
+    // 대입된 roomNumber를 반환
+    return roomNumber;
+}
+
 // /room GET 통신 Router >>
 router.get('/', (req: any, res: any) => {
     res.render('room', {
         name: 'usoock'
     });
+})
+router.post('/', (req: any, res: any) => {
+    res.render('room', {
+        name: 'usoock'
+    });
+    // console.log(req.get('Cookie'));
+    console.log(req.get('Content-Type'));
     console.log(req.get('Cookie'));
 })
 
@@ -79,21 +93,15 @@ const iconv = require('iconv-lite');
 // room.ejs와 socket통신하는 모든 처리를 통괄
 const RoomSocket = (io: any) => {
     io.on('connection', function(socket: any){
-
-
-        let nickname: string = JSON.parse(socket.handshake.cookies['khala-config']).nickname;
-        console.log(nickname);
-        let temp = iconv.encode(nickname, 'utf8');
-        console.log(iconv.decode(temp, 'win1251'));
-        // console.log(iconv.decode(iconv.encode('하마텍션디스크레인지럽스', 'utf-8'), 'utf8'));
-        // console.log( iconv.decode(temp, 'utf8') );
-
-
-        socket.emit('req', socket.handshake.cookies);
-        socket.on('res', (data: string) => {
-            // console.log(data);
+        socket.emit('require:userinfo', socket.id);
+        socket.on('send:userinfo', (data: string) => {
+            let userConfig: UserConfig = {
+                ...JSON.parse(JSON.parse(data).userConfig),
+                session: socket.id
+            }
+            Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber).AddUser(userConfig);
+            console.log( Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber) );
         });
-        // socket.on('response userinfo', 'test');
     })
 }
 
@@ -117,13 +125,6 @@ function PapagoNow(params: any){
         console.dir("res : " + res);
         console.log("body : " + body)
     })
-}
-
-function CreateRoom(host: UserConfig): number /* 방번호 */ {
-    let myRoom = new Room();
-    Room.rooms.push(myRoom);
-    // 생성된 roomNumber를 반환
-    return myRoom.GetRoomNumber();
 }
 
 module.exports = {

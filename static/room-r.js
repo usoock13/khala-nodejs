@@ -6,8 +6,11 @@ import { io } from 'socket.io-client';
 import SERVER_CONFIG from '../server-config.json';
 const socket = io(`ws://${SERVER_CONFIG.url}`);
 
-socket.on('req', data => {
-  socket.emit('res', data + " is 유황노예");
+socket.on('require:userinfo', data => {
+  socket.emit('send:userinfo', JSON.stringify({
+    userConfig: getCookie('khala-config'),
+    roomNumber: getParam('room-no')
+  }));
 })
 
 function UserArea() {
@@ -64,3 +67,18 @@ ReactDOM.render(
     <KhalaChatRoom />,
     document.getElementById('khala-room-container')
 );
+
+function getCookie(name) {
+  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return value? value[2] : null;
+};
+function getParam(sname) {
+  var params = location.search.substr(location.search.indexOf("?") + 1);
+  var sval = "";
+  params = params.split("&");
+  for (var i = 0; i < params.length; i++) {
+    var temp = params[i].split("=");
+    if ([temp[0]] == sname) { sval = temp[1]; }
+  }
+  return sval;
+}

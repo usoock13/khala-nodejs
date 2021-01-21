@@ -8,7 +8,8 @@
     "start": "pm2 start index.js --watch",
     "webpack": "webpack --watch",
     "log": "pm2 log",
-    "status": "pm2 status"
+    "status": "pm2 status",
+    "tsc": "tsc --watch"
   },
   "author": "",
   "license": "ISC",
