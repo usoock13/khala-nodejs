@@ -2,11 +2,13 @@
 import express from 'express';
 const router = express.Router();
 const request = require('request');
+import cookie from 'cookie';
 
 interface UserConfig {
     nickname: string;
     language: string;
     avatar: number;
+    session: string;
 }
 class User {
     public nickname: string;
@@ -21,12 +23,7 @@ class User {
         this.nickname = config.nickname;
         this.language = config.language;
         this.avatar = config.avatar;
-
-        do {
-            this.session = Number(new Date()) + ':' + Math.random().toString().split('.')[1];
-        } while(Number(this.session)===0 || User.GetUserForSession(this.session)!==null) {
-            this.session = Number(new Date()) + ':' + Math.random().toString().split('.')[1];
-        }
+        this.session = config.session;
     }
     static GetUserForSession(session: string) {
         this.allUsers.forEach(user => {
@@ -75,15 +72,28 @@ router.get('/', (req: any, res: any) => {
     res.render('room', {
         name: 'usoock'
     });
-    console.log(req.session);
+    console.log(req.get('Cookie'));
 })
 
+const iconv = require('iconv-lite');
 // room.ejs와 socket통신하는 모든 처리를 통괄
 const RoomSocket = (io: any) => {
     io.on('connection', function(socket: any){
-        socket.on('create-room', function(msg: string){
-            // socket.emit('create-room', socket.handshake.session);
-        })
+
+
+        let nickname: string = JSON.parse(socket.handshake.cookies['khala-config']).nickname;
+        console.log(nickname);
+        let temp = iconv.encode(nickname, 'utf8');
+        console.log(iconv.decode(temp, 'win1251'));
+        // console.log(iconv.decode(iconv.encode('하마텍션디스크레인지럽스', 'utf-8'), 'utf8'));
+        // console.log( iconv.decode(temp, 'utf8') );
+
+
+        socket.emit('req', socket.handshake.cookies);
+        socket.on('res', (data: string) => {
+            // console.log(data);
+        });
+        // socket.on('response userinfo', 'test');
     })
 }
 
@@ -109,7 +119,7 @@ function PapagoNow(params: any){
     })
 }
 
-function CreateRoom(host: UserConfig): number {
+function CreateRoom(host: UserConfig): number /* 방번호 */ {
     let myRoom = new Room();
     Room.rooms.push(myRoom);
     // 생성된 roomNumber를 반환

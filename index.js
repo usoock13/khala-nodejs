@@ -1,18 +1,25 @@
 const path = require('path');
+// express setting
 const express = require('express');
+// express-session config
 const session = require('express-session')({
   secret: "usoock",
+  // session autosave
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
 });
 const app = express();
 const PORT_NUMBER = 2022;
+// add body-parser
 const bodyParser = require('body-parser');
 
+// for use socket.io
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+// this code allow to use 'session' in socket.io
 const ioSession = require('express-socket.io-session');
 
+// router를 분리하여 관리를 용이하게 함
 const router = {
   main: require('./router/mainRouter'),
   room: require('./router/roomRouter').router,

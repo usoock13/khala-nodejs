@@ -43,8 +43,10 @@ textarea {
     padding-top: 1rem;
     padding-bottom: 1rem;
     padding-left: 2.5rem;
+    padding-right: 3.5rem;
     background-color: #fff;
     z-index: 5;
+    box-sizing: border-box;
   }
   #khala-logo {
     position: relative;
@@ -94,7 +96,6 @@ textarea {
   }
 
   .sign-buttons {
-    width: 30%;
     float: right;
   }
   .sign-buttons li {

@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
     res.render('create-room', {name: 'usoock'});
 })
 router.post('/', (req, res) => {
-    res.redirect('/room?room-no='+CreateRoom(req.body.userConfig));
+    res.redirect('/room?room-no='+CreateRoom());
 })
 
 module.exports = router;

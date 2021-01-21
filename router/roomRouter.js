@@ -13,12 +13,7 @@ var User = /** @class */ (function () {
         this.nickname = config.nickname;
         this.language = config.language;
         this.avatar = config.avatar;
-        do {
-            this.session = Number(new Date()) + ':' + Math.random().toString().split('.')[1];
-        } while (Number(this.session) === 0 || User.GetUserForSession(this.session) !== null);
-        {
-            this.session = Number(new Date()) + ':' + Math.random().toString().split('.')[1];
-        }
+        this.session = config.session;
     }
     User.GetUserForSession = function (session) {
         this.allUsers.forEach(function (user) {
@@ -68,14 +63,23 @@ router.get('/', function (req, res) {
     res.render('room', {
         name: 'usoock'
     });
-    console.log(req.session);
+    console.log(req.get('Cookie'));
 });
+var iconv = require('iconv-lite');
 // room.ejs와 socket통신하는 모든 처리를 통괄
 var RoomSocket = function (io) {
     io.on('connection', function (socket) {
-        socket.on('create-room', function (msg) {
-            // socket.emit('create-room', socket.handshake.session);
+        var nickname = JSON.parse(socket.handshake.cookies['khala-config']).nickname;
+        console.log(nickname);
+        var temp = iconv.encode(nickname, 'utf8');
+        console.log(iconv.decode(temp, 'win1251'));
+        // console.log(iconv.decode(iconv.encode('하마텍션디스크레인지럽스', 'utf-8'), 'utf8'));
+        // console.log( iconv.decode(temp, 'utf8') );
+        socket.emit('req', socket.handshake.cookies);
+        socket.on('res', function (data) {
+            // console.log(data);
         });
+        // socket.on('response userinfo', 'test');
     });
 };
 // 번역 REST API 통신
