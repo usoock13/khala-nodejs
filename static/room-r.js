@@ -4,7 +4,7 @@ import React from 'react';
 import './room.css';
 import { io } from 'socket.io-client';
 import SERVER_CONFIG from '../server-config.json';
-const socket = io(`ws://${SERVER_CONFIG.url}`);
+const socket = io(`ws://${SERVER_CONFIG.url}/room`);
 
 socket.on('require:userinfo', data => {
   socket.emit('send:userinfo', JSON.stringify({

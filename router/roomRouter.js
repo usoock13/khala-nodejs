@@ -18,61 +18,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var request = require('request');
-var User = /** @class */ (function () {
-    function User(config) {
-        console.log(config);
-        this.nickname = config.nickname;
-        this.language = config.language;
-        this.avatar = config.avatar;
-        this.session = config.session;
-    }
-    User.GetUserForSession = function (session) {
-        this.allUsers.forEach(function (user) {
-            if (user.session === session)
-                return user;
-        });
-        return null;
-    };
-    User.allUsers = new Array();
-    return User;
-}());
-var Room = /** @class */ (function () {
-    function Room() {
-        this.users = new Array();
-        var number;
-        do {
-            number = Math.random();
-        } while (number === 0 || !!Room.GetRoomForRoomNumber(number));
-        {
-            number = Math.random();
-        }
-        number = Number((number.toString()).split('.')[1]);
-        this.roomNumber = number;
-        console.log("Room is Created / room number : " + this.roomNumber);
-    }
-    Room.GetRoomForRoomNumber = function (roomNumber) {
-        return Room.rooms.filter(function (room) { return room.roomNumber == roomNumber; })[0];
-    };
-    Room.prototype.GetRoomNumber = function () {
-        return this.roomNumber;
-    };
-    Room.prototype.AddUser = function (user) {
-        this.users.push(user);
-    };
-    Room.prototype.RemoveUser = function (session) {
-        this.users = this.users.filter(function (user) { return user.session !== session; });
-    };
-    Room.rooms = new Array();
-    return Room;
-}());
+var User_js_1 = require("./User.js");
+var Room_js_1 = require("./Room.js");
 function CreateRoom() {
-    var myRoom = new Room();
-    // 생성된 방의 roomNumber를 선언
-    var roomNumber = myRoom.GetRoomNumber();
-    // return보다 rooms.push가 먼저 처리됨에 주의
-    Room.rooms.push(myRoom);
+    var myRoom = new Room_js_1.Room();
+    // 생성된 방의 roomNumber를 반환
     // 대입된 roomNumber를 반환
-    return roomNumber;
+    return myRoom.GetRoomNumber();
 }
 // /room GET 통신 Router >>
 router.get('/', function (req, res) {
@@ -84,19 +36,30 @@ router.post('/', function (req, res) {
     res.render('room', {
         name: 'usoock'
     });
-    // console.log(req.get('Cookie'));
-    console.log(req.get('Content-Type'));
-    console.log(req.get('Cookie'));
 });
 var iconv = require('iconv-lite');
 // room.ejs와 socket통신하는 모든 처리를 통괄
 var RoomSocket = function (io) {
-    io.on('connection', function (socket) {
+    var rs = io.of('/room');
+    rs.on('connection', function (socket) {
         socket.emit('require:userinfo', socket.id);
         socket.on('send:userinfo', function (data) {
             var userConfig = __assign(__assign({}, JSON.parse(JSON.parse(data).userConfig)), { session: socket.id });
-            Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber).AddUser(userConfig);
-            console.log(Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber));
+            var targetRoom = Room_js_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
+            targetRoom.AddUser(new User_js_1.User(userConfig));
+            console.log("User Connected to " + targetRoom.roomNumber + " room.");
+            console.log(Room_js_1.Room.rooms);
+            console.log(" ");
+        });
+        socket.on('disconnect', function () {
+            var exitUser = User_js_1.User.allUsers.filter(function (user) { return user.session === socket.id; })[0];
+            var roomsNumberForRemove = Room_js_1.Room.GetRoomForUser(exitUser);
+            roomsNumberForRemove.forEach(function (room) {
+                Room_js_1.Room.RemoveRoom(room.roomNumber);
+                console.log("User disconnected from " + room.roomNumber + " room.");
+            });
+            console.log(Room_js_1.Room.rooms);
+            console.log(" ");
         });
     });
 };
