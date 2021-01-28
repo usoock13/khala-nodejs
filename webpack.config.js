@@ -15,6 +15,7 @@ module.exports = {
                 use: [
                     {
                         loader: 'babel-loader',
+                        query: {compact: false}
                     }
                 ]
             },
@@ -22,6 +23,7 @@ module.exports = {
               test: /\.css$/i,
               use: ["style-loader", "css-loader"],
             },
-        ]
-    }
+        ],
+        loaders: [ { test: /\.js$/, loader: 'babel', query: {compact: false} } ]
+    },
 }

@@ -48,8 +48,7 @@ var RoomSocket = function (io) {
             var targetRoom = Room_js_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
             targetRoom.AddUser(new User_js_1.User(userConfig));
             console.log("User Connected to " + targetRoom.roomNumber + " room.");
-            console.log(Room_js_1.Room.rooms);
-            console.log(" ");
+            socket.emit('user:enter', userConfig.nickname);
         });
         socket.on('disconnect', function () {
             var exitUser = User_js_1.User.allUsers.filter(function (user) { return user.session === socket.id; })[0];
@@ -58,8 +57,6 @@ var RoomSocket = function (io) {
                 Room_js_1.Room.RemoveRoom(room.roomNumber);
                 console.log("User disconnected from " + room.roomNumber + " room.");
             });
-            console.log(Room_js_1.Room.rooms);
-            console.log(" ");
         });
     });
 };
