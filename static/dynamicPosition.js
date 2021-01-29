@@ -28,7 +28,6 @@ $(function() {
 
     setInterval(function(){
         contentsIndex = (contentsIndex+1) % MAX_CONTENTS_INDEX;
-        console.log(contentsIndex);
         $('.intro-image-item.contents img').removeClass('act');
         $('.intro-image-item.shadow img').removeClass('act');
         

@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import './room.css';
 import { io } from 'socket.io-client';
 import SERVER_CONFIG from '../server-config.json';
+import LoadingIcon from './LoadingIcon';
 const socket = io(`ws://${SERVER_CONFIG.url}/room`);
 
 const MessageContext = React.createContext();
@@ -31,8 +32,9 @@ function KhalaChatRoom() {
   return (
       <div className="khala-room-wrap">
         <MessageContext.Provider value={{ message, dispatch, OnUserEnter }}>
-          <ChatArea />
+          <LoadingIcon />
           <UserArea />
+          <ChatArea />
         </MessageContext.Provider>
       </div>
     );

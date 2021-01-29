@@ -12,18 +12,19 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        query: {compact: false}
-                    }
-                ]
+                loader: 'babel-loader',
+                options: {
+                    compact: false
+                }
             },
             {
               test: /\.css$/i,
               use: ["style-loader", "css-loader"],
             },
+            {
+                test: /\.svg$/,
+                loader: 'file-loader'
+            },
         ],
-        loaders: [ { test: /\.js$/, loader: 'babel', query: {compact: false} } ]
     },
 }
