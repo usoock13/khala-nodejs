@@ -40,8 +40,8 @@ const RoomSocket = (io: any) => {
             let targetRoom = Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
             targetRoom.AddUser(new User(userConfig));
             console.log(`User Connected to ${targetRoom.roomNumber} room.`)
-
-            socket.emit('user:enter', userConfig.nickname);
+            
+            socket.emit('user:enter', userConfig);
         });
 
         socket.on('disconnect', () => {

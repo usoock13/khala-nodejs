@@ -48,7 +48,7 @@ var RoomSocket = function (io) {
             var targetRoom = Room_js_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
             targetRoom.AddUser(new User_js_1.User(userConfig));
             console.log("User Connected to " + targetRoom.roomNumber + " room.");
-            socket.emit('user:enter', userConfig.nickname);
+            socket.emit('user:enter', userConfig);
         });
         socket.on('disconnect', function () {
             var exitUser = User_js_1.User.allUsers.filter(function (user) { return user.session === socket.id; })[0];

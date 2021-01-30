@@ -1,14 +1,55 @@
 'use strict';
 
-import React, { useReducer, useContext } from 'react';
+import React, { useReducer, useContext, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './room.css';
 import { io } from 'socket.io-client';
 import SERVER_CONFIG from '../server-config.json';
+
+import { getCookie, getParam } from './GetParams';
 import LoadingIcon from './LoadingIcon';
+import { SystemMessage, UserMessage } from './MessageComponents';
+import { UserItem } from './UserComponent'
 const socket = io(`ws://${SERVER_CONFIG.url}/room`);
 
-const MessageContext = React.createContext();
+const RoomContext = React.createContext();
+
+const roomReducer = (state, action) => {
+  switch(action.type){
+    case 'load':
+      return {
+        ...state,
+        isLoading: true
+      }
+    case 'system-message':
+      const newSystemMessage = <SystemMessage user={action.payload.user} key={state.messages.length} />;
+      return {
+        ...state,
+        messages: [
+          ...state.messages,
+          newSystemMessage
+        ]
+      };
+    case 'user-message':
+      const newUserMessage = <UserMessage user={action.payload.user} msg={action.payload.msg} key={user.session} />
+      return {
+        ...state,
+        messages: [
+          ...state.messages,
+          newUserMessage
+        ]
+      };
+    case 'user-enter':
+      const newUser = <UserItem user={action.payload} key={action.payload.session} />
+      return {
+        ...state,
+        users: [
+          ...state.users,
+          newUser
+        ]
+      }
+  }
+}
 
 function KhalaChatRoom() {
   // 서버측 User정보 요청 이벤트
@@ -21,64 +62,34 @@ function KhalaChatRoom() {
   })
 
   // User 입장 이벤트 (socket.io). User정보를 받은 서버로부터 전달받는 event-user:enter에 대한 처리
-  const OnUserEnter = () => {
-    socket.on('user:enter', (userName) => {
-      dispatch({ type: 'system', payload: userName });
-    })
-  }
+  socket.on('user:enter', (user) => {
+    dispatch({
+      type: 'system-message',
+      payload: { user: user }
+    });
+    dispatch({ type: 'load' });
+    dispatch({ type: 'user-enter', payload: user });
+  })
 
-  const [message, dispatch] = useReducer(messageReducer, []);
-  
+  const [roomState, dispatch] = useReducer(roomReducer, {
+    isLoading : false,
+    messages: [],
+    users: [],
+  })
+
   return (
       <div className="khala-room-wrap">
-        <MessageContext.Provider value={{ message, dispatch, OnUserEnter }}>
-          <LoadingIcon />
+      <LoadingIcon isLoading={roomState.isLoading} />
+        <RoomContext.Provider value={{ roomState, dispatch }}>
           <UserArea />
           <ChatArea />
-        </MessageContext.Provider>
+        </RoomContext.Provider>
       </div>
     );
 }
 
-function SystemMessage({ userName }) {
-  return (
-    <li class="khala-redirection-system">
-      <h6>System</h6>
-      <div>
-        <p>Welcome, {userName}</p>
-      </div>
-    </li>
-  )
-}
-
-function ChatItem(user, msg) {
-  function ChatItemAvatar() {
-    image = `/image/avatar/avatar0${user.avatar}.jpg`;
-    return (
-      <span class="item-avatar">
-        <img src={image} />
-      </span>
-    )
-  }
-
-  return (
-    <li class="khala-redirection-item isMe">
-      <ChatItemAvatar />
-      <h6 class="item-username">usw</h6>
-      <div class="item-contents">
-        <div class="item-frame">
-          <p class="item-text active" data-lang="ko">나는 유숙이다</p>
-        </div>
-        <div class="item-switch-wrap">
-          <ul class="item-switch-translation">
-          </ul>
-        </div>
-      </div>
-    </li>
-  )
-}
-
 function UserArea() {
+  let users = useContext(RoomContext).roomState.users;
   return (
     <section className="khala-userarea">
       <div className="khala-userarea-header">
@@ -86,15 +97,15 @@ function UserArea() {
       </div>
       <div className="khala-userarea-body">
         <ul className="khala-userlist">
-          
+          {users}
         </ul>
       </div>
     </section>
   );
 }
 
-function ChatArea(props) {
-  let message = useContext(MessageContext).message;
+function ChatArea() {
+  let messages = useContext(RoomContext).roomState.messages;
   return (
     <section className="khala-chat">
       <div className="khala-chat-header">
@@ -105,7 +116,7 @@ function ChatArea(props) {
       </div>
       <div className="khala-chat-redirection">
         <ul className="khala-redirection-list">
-          {message}
+          {messages}
         </ul>
       </div>
       <div className="khala-chat-input">
@@ -120,32 +131,7 @@ function ChatArea(props) {
   );
 }
 
-const messageReducer = (state, action) => {
-  switch(action){
-    case 'system':
-      const newItem = <SystemMessage userName={action.userName} />;
-      return {...state, newItem };
-    case 'message':
-      return;
-  }
-}
-
 ReactDOM.render(
     <KhalaChatRoom />,
     document.getElementById('khala-room-container')
 );
-
-function getCookie(name) {
-  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return value? value[2] : null;
-};
-function getParam(sname) {
-  var params = location.search.substr(location.search.indexOf("?") + 1);
-  var sval = "";
-  params = params.split("&");
-  for (var i = 0; i < params.length; i++) {
-    var temp = params[i].split("=");
-    if ([temp[0]] == sname) { sval = temp[1]; }
-  }
-  return sval;
-}

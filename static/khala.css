@@ -121,3 +121,30 @@ textarea {
     color: var(--khala-point-color);
     text-decoration: underline;
   }
+
+.fadeOutTop.khala-animate {
+  animation: fadeOutTop 600ms forwards;
+}
+@keyframes fadeOutTop {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, -200%);
+  }
+}
+.fadeInBottom.khala-animate {
+  animation: fadeInBottom 600ms forwards;
+}
+@keyframes fadeInBottom {
+  0% {
+    opacity: 0;
+    transform: translate(0, 200%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
