@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { useReducer, useContext, useState } from 'react';
+import React, { useReducer, useContext, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './room.css';
 import { io } from 'socket.io-client';
@@ -53,22 +53,34 @@ const roomReducer = (state, action) => {
 
 function KhalaChatRoom() {
   // 서버측 User정보 요청 이벤트
-  socket.on('require:userinfo', data => {
-    // 요청 응답. User정보(me)를 서버에서 받으면 해당 User를 입장시킨 후 emit.('user:enter')처리
-    socket.emit('send:userinfo', JSON.stringify({
-      userConfig: getCookie('khala-config'),
-      roomNumber: getParam('room-no')
-    }));
+  useEffect(() => {
+    socket.on('require:userinfo', data => {
+      // 요청 응답. User정보(me)를 서버에서 받으면 해당 User를 입장시킨 후 emit.('user:enter')처리
+      socket.emit('send:userinfo', JSON.stringify({
+        userConfig: getCookie('khala-config'),
+        roomNumber: getParam('room-no')
+      }));
+    });
+  
+    // User 입장 이벤트 (socket.io). User정보를 받은 서버로부터 전달받는 event-user:enter에 대한 처리
+    socket.on('user:enter', (user) => {
+      if(!user) return;
+      dispatch({
+        type: 'system-message',
+        payload: { user: user }
+      });
+      dispatch({ type: 'load' });
+      dispatch({ type: 'user-enter', payload: user });
+    });
+  }, [])
+
+  socket.on('not-exist-room', () =>  {
+    alert('The room does not exist... Looks like you need a new room!');
+    location.href = '/create-room';
   })
 
-  // User 입장 이벤트 (socket.io). User정보를 받은 서버로부터 전달받는 event-user:enter에 대한 처리
-  socket.on('user:enter', (user) => {
-    dispatch({
-      type: 'system-message',
-      payload: { user: user }
-    });
-    dispatch({ type: 'load' });
-    dispatch({ type: 'user-enter', payload: user });
+  socket.on('user:exit', (data) => {
+    console.log('data : ' + data);
   })
 
   const [roomState, dispatch] = useReducer(roomReducer, {

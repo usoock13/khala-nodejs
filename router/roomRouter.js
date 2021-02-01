@@ -43,19 +43,32 @@ var RoomSocket = function (io) {
     var rs = io.of('/room');
     rs.on('connection', function (socket) {
         socket.emit('require:userinfo', socket.id);
+
         socket.on('send:userinfo', function (data) {
             var userConfig = __assign(__assign({}, JSON.parse(JSON.parse(data).userConfig)), { session: socket.id });
             var targetRoom = Room_js_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
-            targetRoom.AddUser(new User_js_1.User(userConfig));
-            console.log("User Connected to " + targetRoom.roomNumber + " room.");
-            socket.emit('user:enter', userConfig);
+            
+            if(targetRoom){
+                targetRoom.AddUser(new User_js_1.User(userConfig));
+                socket.join(targetRoom.roomNumber);
+                console.log('User Connected to ' + targetRoom.roomNumber + ' room.');
+
+                console.log(targetRoom.users);
+                rs.to(targetRoom.roomNumber).emit('user:enter', userConfig);
+            } else {
+                console.log('User attempts to connect to a room that does not exist.')
+                socket.emit('not-exist-room');
+            }
         });
         socket.on('disconnect', function () {
             var exitUser = User_js_1.User.allUsers.filter(function (user) { return user.session === socket.id; })[0];
             var roomsNumberForRemove = Room_js_1.Room.GetRoomForUser(exitUser);
+            rs.emit('user:exit', exitUser);
             roomsNumberForRemove.forEach(function (room) {
-                Room_js_1.Room.RemoveRoom(room.roomNumber);
-                console.log("User disconnected from " + room.roomNumber + " room.");
+                if(room.users.length <= 0) {
+                    Room_js_1.Room.RemoveRoom(room.roomNumber);
+                    console.log("User disconnected from " + room.roomNumber + " room.");
+                }
             });
         });
     });
