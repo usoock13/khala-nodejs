@@ -21,9 +21,10 @@ export class User {
         User.allUsers.push(this);
     }
     static GetUserForSession(session: string) {
+        let result;
         this.allUsers.forEach(user => {
-            if(user.session === session) return user;
+            if(user.session === session) result = user;
         })
-        return null;
+        return result;
     }
 }

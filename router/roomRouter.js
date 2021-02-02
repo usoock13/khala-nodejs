@@ -41,35 +41,64 @@ var iconv = require('iconv-lite');
 // room.ejs와 socket통신하는 모든 처리를 통괄
 var RoomSocket = function (io) {
     var rs = io.of('/room');
+    // 사용자가 모두 퇴장할 경우 해당 방을 등록할 변수. 지연시간동안 새로운 유저가 입장할 경우 방 파괴를 취소
+    var roomsWatingForDestroy = [];
     rs.on('connection', function (socket) {
+        // User Info (khala-config) 요청
         socket.emit('require:userinfo', socket.id);
-
+        // 사용자(Client)가 Usre info 요청에 정상적으로 응답하였을 경우, 입창 처리 핸들러
         socket.on('send:userinfo', function (data) {
             var userConfig = __assign(__assign({}, JSON.parse(JSON.parse(data).userConfig)), { session: socket.id });
+            // 사용자가 보낸 방 번호(url의 parameter)로 방을 검색
             var targetRoom = Room_js_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
-            
-            if(targetRoom){
+            socket.join(JSON.parse(data).roomNumber);
+            // 방 번호로 검색한 결과, 해당하는 방이 있을 경우
+            if (targetRoom) {
                 targetRoom.AddUser(new User_js_1.User(userConfig));
-                socket.join(targetRoom.roomNumber);
-                console.log('User Connected to ' + targetRoom.roomNumber + ' room.');
-
-                console.log(targetRoom.users);
-                rs.to(targetRoom.roomNumber).emit('user:enter', userConfig);
-            } else {
-                console.log('User attempts to connect to a room that does not exist.')
+                rs.to(targetRoom.roomNumber).emit('user:enter', targetRoom.users, userConfig);
+                roomsWatingForDestroy.forEach(function (item) {
+                    if (item.roomNumber === targetRoom.roomNumber)
+                        clearTimeout(item.timeout);
+                });
+                console.log("User Connected to " + targetRoom.roomNumber + " room.");
+            }
+            else {
                 socket.emit('not-exist-room');
             }
         });
+        // 사용자 연결 끊김 이벤트 핸들러 >>
         socket.on('disconnect', function () {
             var exitUser = User_js_1.User.allUsers.filter(function (user) { return user.session === socket.id; })[0];
             var roomsNumberForRemove = Room_js_1.Room.GetRoomForUser(exitUser);
-            rs.emit('user:exit', exitUser);
+            // 방에서 사용자를 제거. 큰일이 있지 않은 이상 반환된 배열의 길이는 1일 것.
             roomsNumberForRemove.forEach(function (room) {
-                if(room.users.length <= 0) {
-                    Room_js_1.Room.RemoveRoom(room.roomNumber);
-                    console.log("User disconnected from " + room.roomNumber + " room.");
+                // 방에서 exitUser에 해당하는 User를 제거
+                room.RemoveUser(exitUser.session);
+                // socket.io의 room에서도 해당 세션을 제거
+                socket.leave(room.roomNumber);
+                console.log("User disconnected from " + room.roomNumber + " room.");
+                // 방에 남은 인원이 없을 경우
+                if (room.users.length <= 0) {
+                    // 잠깐의 지연시간을 가진 뒤 해당 방을 제거
+                    var DELAY_TO_DESTROY = 5000;
+                    var destroyTimeout = setTimeout(function (temp) {
+                        console.log(temp);
+                        Room_js_1.Room.RemoveRoom(room.roomNumber);
+                    }, DELAY_TO_DESTROY);
+                    roomsWatingForDestroy.push({ timeout: destroyTimeout, roomNumber: room.roomNumber });
                 }
             });
+        });
+        // 사용자가 보낸 메세지 처리 핸들러 >>
+        socket.on('send:user-message', function (msg) {
+            var user = User_js_1.User.GetUserForSession(socket.id);
+            if (user) {
+                var room = Room_js_1.Room.GetRoomForUser(user)[0];
+                rs.to(room.roomNumber).emit('response:user-message', user, msg);
+            }
+            else {
+                console.error('This user is who? Not found this man.');
+            }
         });
     });
 };

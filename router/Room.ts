@@ -24,10 +24,20 @@ export class Room {
     static RemoveRoom(roomNumber: string) {
         let newRooms: Room[] = this.rooms.filter(room => room.roomNumber!==roomNumber);
         this.rooms = newRooms.concat();
+        console.log(`Room was destroyed, because all user in the room leave the room.`);
     }
     static GetRoomForUser(user: User): Room[] {
         let result = this.rooms.filter(room => {
             if(room.users.includes(user)) return room;
+        })
+        return result;
+    }
+    GetLanguageTypes(): string[] {
+        let result = Array<string>();
+        this.users.forEach(user => {
+            if(!result.includes(user.language)){
+                result.push(user.language);
+            }
         })
         return result;
     }

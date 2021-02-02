@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { useReducer, useContext, useEffect } from 'react';
+import React, { useReducer, useContext, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import './room.css';
 import { io } from 'socket.io-client';
@@ -31,7 +31,7 @@ const roomReducer = (state, action) => {
         ]
       };
     case 'user-message':
-      const newUserMessage = <UserMessage user={action.payload.user} msg={action.payload.msg} key={user.session} />
+      const newUserMessage = <UserMessage user={action.payload.user} msg={action.payload.msg} key={state.messages.length} />
       return {
         ...state,
         messages: [
@@ -40,20 +40,25 @@ const roomReducer = (state, action) => {
         ]
       };
     case 'user-enter':
-      const newUser = <UserItem user={action.payload} key={action.payload.session} />
+      let nextUserComponents = action.payload;
       return {
         ...state,
         users: [
-          ...state.users,
-          newUser
+          nextUserComponents
         ]
       }
   }
 }
 
 function KhalaChatRoom() {
+  const [roomState, dispatch] = useReducer(roomReducer, {
+    isLoading : false,
+    messages: [],
+    users: [],
+  })
   // 서버측 User정보 요청 이벤트
   useEffect(() => {
+    // 서버의 User Info (khala-config) 요청에 응답
     socket.on('require:userinfo', data => {
       // 요청 응답. User정보(me)를 서버에서 받으면 해당 User를 입장시킨 후 emit.('user:enter')처리
       socket.emit('send:userinfo', JSON.stringify({
@@ -61,40 +66,36 @@ function KhalaChatRoom() {
         roomNumber: getParam('room-no')
       }));
     });
-  
-    // User 입장 이벤트 (socket.io). User정보를 받은 서버로부터 전달받는 event-user:enter에 대한 처리
-    socket.on('user:enter', (user) => {
-      if(!user) return;
-      dispatch({
-        type: 'system-message',
-        payload: { user: user }
+    // 사용자 입장 이벤트 (socket.io). User정보를 받은 서버로부터 전달받는 event-user:enter에 대한 처리
+    socket.on('user:enter', (users, enterUser) => {
+      if(!enterUser) return;
+      if(!roomState.isLoading) dispatch({ type: 'load' });
+
+      // jsx형식으로 UserItem을 담을 배열 선언
+      let nextUserComponents = new Array();
+      users.forEach(user => {
+        nextUserComponents.push(<UserItem user={user} key={user.session} />)
       });
-      dispatch({ type: 'load' });
-      dispatch({ type: 'user-enter', payload: user });
+      dispatch({ type: 'system-message', payload: { user: enterUser } });
+      dispatch({ type: 'user-enter', payload: nextUserComponents });
     });
+    // 사용자 퇴장 이벤트 핸들러 >>
+    socket.on('user:exit', (data) => {
+      console.log('data : ' + data);
+    })
+    // 방 번호 조회 결과, 방이 존재하지 않을 경우의 핸들러
+    socket.on('not-exist-room', () =>  {
+      alert('The room does not exist... Looks like you need a new room!');
+      location.href = '/create-room';
+    })
   }, [])
-
-  socket.on('not-exist-room', () =>  {
-    alert('The room does not exist... Looks like you need a new room!');
-    location.href = '/create-room';
-  })
-
-  socket.on('user:exit', (data) => {
-    console.log('data : ' + data);
-  })
-
-  const [roomState, dispatch] = useReducer(roomReducer, {
-    isLoading : false,
-    messages: [],
-    users: [],
-  })
 
   return (
       <div className="khala-room-wrap">
       <LoadingIcon isLoading={roomState.isLoading} />
         <RoomContext.Provider value={{ roomState, dispatch }}>
-          <UserArea />
-          <ChatArea />
+          <UserArea io={io} />
+          <ChatArea io={io} />
         </RoomContext.Provider>
       </div>
     );
@@ -117,6 +118,34 @@ function UserArea() {
 }
 
 function ChatArea() {
+  let dispatch = useContext(RoomContext).dispatch;
+  let formRef = useRef();
+
+  const HandleSubmit = (e) => {
+    e.preventDefault();
+    const msg = formRef.current.text.value;
+    if(msg.trim().length <= 0) return;
+    SendUserMessage(msg)
+  }
+  const SendUserMessage = (msg) => {
+    socket.emit('send:user-message', msg);
+    formRef.current.reset();
+  }
+  useEffect(() => {
+    socket.on('response:user-message', (user, msg) => {
+      console.log(user, msg);
+      dispatch({ type: 'user-message', payload: {user, msg} })
+    })
+  }, [])
+  const HandleKeyDown = (e) => {
+    // Enter 입력
+    if(e.keyCode === 13) {
+      e.preventDefault();
+      const msg = formRef.current.text.value;
+      SendUserMessage(msg);
+    }
+  }
+
   let messages = useContext(RoomContext).roomState.messages;
   return (
     <section className="khala-chat">
@@ -132,7 +161,7 @@ function ChatArea() {
         </ul>
       </div>
       <div className="khala-chat-input">
-        <form className="khala-input-form">
+        <form className="khala-input-form" ref={formRef} onKeyDown={HandleKeyDown} onSubmit={HandleSubmit}>
           <textarea className="khala-input-text" name="text"></textarea>
           <div className="khala-input-buttonWrap">
             <input id="khala-text-submit" type="submit" value="send" />

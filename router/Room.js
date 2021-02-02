@@ -22,11 +22,21 @@ var Room = /** @class */ (function () {
     Room.RemoveRoom = function (roomNumber) {
         var newRooms = this.rooms.filter(function (room) { return room.roomNumber !== roomNumber; });
         this.rooms = newRooms.concat();
+        console.log("Room was destroyed, because all user in the room leave the room.");
     };
     Room.GetRoomForUser = function (user) {
         var result = this.rooms.filter(function (room) {
             if (room.users.includes(user))
                 return room;
+        });
+        return result;
+    };
+    Room.prototype.GetLanguageTypes = function () {
+        var result = Array();
+        this.users.forEach(function (user) {
+            if (!result.includes(user.language)) {
+                result.push(user.language);
+            }
         });
         return result;
     };

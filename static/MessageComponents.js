@@ -11,26 +11,27 @@ export function SystemMessage({ user }) {
     )
   }
   
-export function UserMessage(user, msg) {
+export function UserMessage({user, msg}) {
     function ChatItemAvatar() {
-      image = `/image/avatar/avatar0${user.avatar}.jpg`;
+      const image = `/image/avatar/avatar0${user.avatar}.jpg`;
       return (
-        <span class="item-avatar">
+        <span className="item-avatar">
           <img src={image} />
         </span>
       )
     }
   
     return (
-      <li class="khala-redirection-item isMe">
+      <li className="khala-redirection-item isMe">
         <ChatItemAvatar />
-        <h6 class="item-username">usw</h6>
-        <div class="item-contents">
-          <div class="item-frame">
-            <p class="item-text active" data-lang="ko">나는 유숙이다</p>
+        <h6 className="item-username">{user.nickname}</h6>
+        <div className="item-contents">
+          <div className="item-frame">
+            <p className="item-text active" data-lang="ko">{msg}</p>
           </div>
-          <div class="item-switch-wrap">
-            <ul class="item-switch-translation">
+          <div className="item-switch-wrap">
+            <ul className="item-switch-translation">
+              <li className="item-switch-translation-button">KO</li>
             </ul>
           </div>
         </div>

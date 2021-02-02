@@ -10,11 +10,12 @@ var User = /** @class */ (function () {
         User.allUsers.push(this);
     }
     User.GetUserForSession = function (session) {
+        var result;
         this.allUsers.forEach(function (user) {
             if (user.session === session)
-                return user;
+                result = user;
         });
-        return null;
+        return result;
     };
     User.allUsers = new Array();
     return User;
