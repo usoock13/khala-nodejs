@@ -22,7 +22,7 @@ const roomReducer = (state, action) => {
         isLoading: true
       }
     case 'system-message':
-      const newSystemMessage = <SystemMessage user={action.payload.user} key={state.messages.length} />;
+      const newSystemMessage = <SystemMessage user={action.payload.user} msg={action.payload.msg} key={state.messages.length} />;
       return {
         ...state,
         messages: [
@@ -76,19 +76,29 @@ function KhalaChatRoom() {
       users.forEach(user => {
         nextUserComponents.push(<UserItem user={user} key={user.session} />)
       });
-      dispatch({ type: 'system-message', payload: { user: enterUser } });
+      dispatch({ type: 'system-message', payload: { user: enterUser, msg: "Welcom, " } });
       dispatch({ type: 'user-enter', payload: nextUserComponents });
     });
-    // 사용자 퇴장 이벤트 핸들러 >>
-    socket.on('user:exit', (data) => {
-      console.log('data : ' + data);
-    })
     // 방 번호 조회 결과, 방이 존재하지 않을 경우의 핸들러
     socket.on('not-exist-room', () =>  {
       alert('The room does not exist... Looks like you need a new room!');
       location.href = '/create-room';
     })
-  }, [])
+    // 사용자 퇴장 이벤트 핸들러 >>
+    socket.on('response:user-leave', (users, exitUser) => {
+      let nextUserComponents = new Array();
+      users.forEach(user => {
+        nextUserComponents.push(<UserItem user={user} key={user.session} />)
+      });
+      dispatch({ type: 'system-message', payload: { user: exitUser, msg: "Goodbye, " } });
+      dispatch({ type: 'user-enter', payload: nextUserComponents });
+    })
+  }, []);
+  useEffect(() => {
+    console.log('add message');
+    let messageContainer = document.querySelector('.khala-chat-redirection')
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }, [roomState.messages])
 
   return (
       <div className="khala-room-wrap">

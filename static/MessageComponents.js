@@ -1,11 +1,11 @@
 import React from 'react';
 
-export function SystemMessage({ user }) {
+export function SystemMessage({ user, msg }) {
     return (
       <li className="khala-redirection-system">
         <h6>System</h6>
         <div>
-          <p>Welcome, {user.nickname}</p>
+          <p>{msg}{user.nickname}</p>
         </div>
       </li>
     )

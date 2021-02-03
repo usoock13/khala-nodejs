@@ -38,6 +38,7 @@ const RoomSocket = (io: any) => {
         
         // 사용자(Client)가 Usre info 요청에 정상적으로 응답하였을 경우, 입창 처리 핸들러
         socket.on('send:userinfo', (data: string) => {
+            if(!JSON.parse(JSON.parse(data).userConfig)) return;
             let userConfig: UserConfig = {
                 ...JSON.parse(JSON.parse(data).userConfig),
                 session: socket.id
@@ -69,6 +70,8 @@ const RoomSocket = (io: any) => {
                 room.RemoveUser(exitUser.session);
                 // socket.io의 room에서도 해당 세션을 제거
                 socket.leave(room.roomNumber);
+                // 방에 남은 유저와 나간 유저를 남은 사용자들에게 전달
+                rs.to(room.roomNumber).emit('response:user-leave', room.users, exitUser);
                 console.log(`User disconnected from ${room.roomNumber} room.`);
                 // 방에 남은 인원이 없을 경우
                 if(room.users.length <=0){
@@ -88,6 +91,7 @@ const RoomSocket = (io: any) => {
             if(user){
                 const room : Room = Room.GetRoomForUser(user)[0];
                 rs.to(room.roomNumber).emit('response:user-message', user, msg);
+                console.log(room.GetLanguageTypes());
             } else {
                 console.error('This user is who? Not found this man.');
             }

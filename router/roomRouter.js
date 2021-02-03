@@ -48,6 +48,8 @@ var RoomSocket = function (io) {
         socket.emit('require:userinfo', socket.id);
         // 사용자(Client)가 Usre info 요청에 정상적으로 응답하였을 경우, 입창 처리 핸들러
         socket.on('send:userinfo', function (data) {
+            if (!JSON.parse(JSON.parse(data).userConfig))
+                return;
             var userConfig = __assign(__assign({}, JSON.parse(JSON.parse(data).userConfig)), { session: socket.id });
             // 사용자가 보낸 방 번호(url의 parameter)로 방을 검색
             var targetRoom = Room_js_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
@@ -76,6 +78,8 @@ var RoomSocket = function (io) {
                 room.RemoveUser(exitUser.session);
                 // socket.io의 room에서도 해당 세션을 제거
                 socket.leave(room.roomNumber);
+                // 방에 남은 유저와 나간 유저를 남은 사용자들에게 전달
+                rs.to(room.roomNumber).emit('response:user-leave', room.users, exitUser);
                 console.log("User disconnected from " + room.roomNumber + " room.");
                 // 방에 남은 인원이 없을 경우
                 if (room.users.length <= 0) {
@@ -95,6 +99,7 @@ var RoomSocket = function (io) {
             if (user) {
                 var room = Room_js_1.Room.GetRoomForUser(user)[0];
                 rs.to(room.roomNumber).emit('response:user-message', user, msg);
+                console.log(room.GetLanguageTypes());
             }
             else {
                 console.error('This user is who? Not found this man.');
