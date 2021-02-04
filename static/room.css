@@ -10,7 +10,7 @@
     padding: 1.5rem;
     padding-top: 7.4rem;
     overflow: hidden;
-    font-family: noto sans kr;
+    font-family: var(--khala-basic-font-family);
 }
 .khala-userarea {
     width: calc(30% - 1rem);
@@ -71,7 +71,7 @@
     display: inline-block;
     width: calc(100% - 3.6rem);
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 400;
     vertical-align: middle;
 }
 /* << KHALA room userarea CSS */
@@ -232,11 +232,11 @@
     margin: 1.5rem auto 0;
     padding: 1.4rem 0.8rem;
     color: #555;
-    font-family: noto sans kr;
+    font-family: var(--khala-basic-font-family);
     text-align: center;
     background-color: rgba(255, 255, 255, .85);
-    /*border: .1rem solid var(--khala-point-color);
-    */box-shadow: .2rem 0 .5rem rgba(0, 0, 0, .15);
+    /*border: .1rem solid var(--khala-point-color);*/
+    box-shadow: .2rem 0 .5rem rgba(0, 0, 0, .15);
     border-radius: .5rem;
     -webkit-border-radius: .5rem;
     -moz-border-radius: .5rem;
@@ -251,7 +251,7 @@
 }
 .khala-redirection-system p {
     font-size: 1.4rem;
-    font-weight: 300;
+    font-weight: 400;
 }
 .khala-redirection-system p span {
     color: var(--khala-sub-color);

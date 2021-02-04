@@ -2,8 +2,7 @@
     --khala-point-color: #535B9D;
     --khala-sub-color: #11B0AB;
     --khala-background-color: #F3F5FA;
-    --khala-basic-font-family: nanum gothic;
-    
+    --khala-basic-font-family: "Spoqa Han Sans";
     font-size: 0.52083333333333vw;
     font-family: var(--khala-basic-font-family);
 }
