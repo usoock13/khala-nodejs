@@ -9,7 +9,7 @@ const session = require('express-session')({
   saveUninitialized: true,
 });
 const app = express();
-const PORT_NUMBER = 2022;
+const PORT_NUMBER = process.env.PORT || 2022;
 // add body-parser
 const bodyParser = require('body-parser');
 

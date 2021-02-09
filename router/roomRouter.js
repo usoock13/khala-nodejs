@@ -14,12 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// const express = require('express');
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var request = require('request');
 var User_js_1 = require("./User.js");
 var Room_js_1 = require("./Room.js");
+var papago_js_1 = require("./papago.js");
 function CreateRoom() {
     var myRoom = new Room_js_1.Room();
     // 생성된 방의 roomNumber를 반환
@@ -100,6 +100,7 @@ var RoomSocket = function (io) {
                 var room = Room_js_1.Room.GetRoomForUser(user)[0];
                 rs.to(room.roomNumber).emit('response:user-message', user, msg);
                 console.log(room.GetLanguageTypes());
+                papago_js_1.Translate({ sourceLang: 'ko', targetLang: 'en', query: msg });
             }
             else {
                 console.error('This user is who? Not found this man.');

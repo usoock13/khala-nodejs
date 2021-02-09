@@ -142,6 +142,7 @@ function ChatArea() {
     formRef.current.reset();
   }
   useEffect(() => {
+    formRef.current.text.focus();
     socket.on('response:user-message', (user, msg) => {
       console.log(user, msg);
       dispatch({ type: 'user-message', payload: {user, msg} })

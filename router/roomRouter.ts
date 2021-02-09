@@ -1,10 +1,10 @@
-// const express = require('express');
 import express from 'express';
 const router = express.Router();
 const request = require('request');
 
 import { User, UserConfig } from './User.js';
 import { Room } from './Room.js';
+import { Translate } from './papago.js';
 
 function CreateRoom(): string /* 방번호 */ {
     let myRoom = new Room();
@@ -85,6 +85,7 @@ const RoomSocket = (io: any) => {
                 }
             })
         })
+
         // 사용자가 보낸 메세지 처리 핸들러 >>
         socket.on('send:user-message', (msg: string) => {
             const user = User.GetUserForSession(socket.id);
@@ -92,6 +93,7 @@ const RoomSocket = (io: any) => {
                 const room : Room = Room.GetRoomForUser(user)[0];
                 rs.to(room.roomNumber).emit('response:user-message', user, msg);
                 console.log(room.GetLanguageTypes());
+                Translate({ sourceLang: 'ko', targetLang: 'en', query: msg });
             } else {
                 console.error('This user is who? Not found this man.');
             }
