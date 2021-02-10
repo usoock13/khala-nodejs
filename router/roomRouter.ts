@@ -4,7 +4,9 @@ const request = require('request');
 
 import { User, UserConfig } from './User.js';
 import { Room } from './Room.js';
-import { Translate } from './papago.js';
+import { Papago } from './papago.js';
+
+let isDeadPapago = false;
 
 function CreateRoom(): string /* 방번호 */ {
     let myRoom = new Room();
@@ -77,8 +79,7 @@ const RoomSocket = (io: any) => {
                 if(room.users.length <=0){
                     // 잠깐의 지연시간을 가진 뒤 해당 방을 제거
                     const DELAY_TO_DESTROY = 5000;
-                    const destroyTimeout = setTimeout((temp: any) => {
-                        console.log(temp)
+                    const destroyTimeout = setTimeout(() => {
                         Room.RemoveRoom(room.roomNumber);
                     }, DELAY_TO_DESTROY);
                     roomsWatingForDestroy.push({ timeout: destroyTimeout, roomNumber: room.roomNumber });
@@ -87,18 +88,58 @@ const RoomSocket = (io: any) => {
         })
 
         // 사용자가 보낸 메세지 처리 핸들러 >>
-        socket.on('send:user-message', (msg: string) => {
-            const user = User.GetUserForSession(socket.id);
+        socket.on('send:user-message', async (msg: string) => {
+            const user: any = User.GetUserForSession(socket.id);
             if(user){
+                // 메세지를 전송한 사용자의 정보를 바탕으로 해당 메세지가 전송된 방을 반환함
                 const room : Room = Room.GetRoomForUser(user)[0];
+                // 방에 접속한 유저들이 사용하는 언어들의 목록을 반환하는 메서드 > GetLanguageTypes
+                const targetLanguages = room.GetLanguageTypes();
+                
+                let translatedMsg: unknown = await Translate(user, msg, targetLanguages);
+                console.log(translatedMsg);
+
+                // 전송할 데이터의 Payload. 원래의 메세지와 유저, 번역된 메세지(들)와 대상 언어(들)가 탑재.
+                const payload = {
+                    orgMsg: msg,
+                    orgUser: user,
+                    targetLanguages: targetLanguages,
+                }
+                
+                // 같은 방에 있는 사용자에게 메세지 전송
                 rs.to(room.roomNumber).emit('response:user-message', user, msg);
-                console.log(room.GetLanguageTypes());
-                Translate({ sourceLang: 'ko', targetLang: 'en', query: msg });
             } else {
                 console.error('This user is who? Not found this man.');
             }
         })
     })
+}
+
+async function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
+    let returnData: any = [];
+    await new Promise((resolve) => {
+        let array: any = [];
+        if(!isDeadPapago){
+            langTypes.forEach(async lang => {
+                if (lang !== orgUser.language){
+                    const params = {
+                        sourceLang: orgUser.language,
+                        targetLang: lang,
+                        query: orgMsg
+                    }
+                    await Papago(params)
+                    .then((res: any) => {
+                        const result = JSON.parse(res).message.result;
+                        array.push({ type: result.tarLangType, msg: result.translatedText });
+                        resolve({ type: result.tarLangType, msg: result.translatedText });
+                    });
+                }
+            })
+        }
+    }).then(res => {
+        returnData.push(res);
+    })
+    return returnData;
 }
 
 // 번역 REST API 통신

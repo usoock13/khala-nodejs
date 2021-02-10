@@ -15,6 +15,7 @@ const socket = io(`ws://${SERVER_CONFIG.url}/room`);
 const RoomContext = React.createContext();
 
 const roomReducer = (state, action) => {
+  const payload = action.payload;
   switch(action.type){
     case 'load':
       return {
@@ -22,7 +23,7 @@ const roomReducer = (state, action) => {
         isLoading: true
       }
     case 'system-message':
-      const newSystemMessage = <SystemMessage user={action.payload.user} msg={action.payload.msg} key={state.messages.length} />;
+      const newSystemMessage = <SystemMessage user={payload.user} msg={payload.msg} key={state.messages.length} />;
       return {
         ...state,
         messages: [
@@ -31,7 +32,7 @@ const roomReducer = (state, action) => {
         ]
       };
     case 'user-message':
-      const newUserMessage = <UserMessage user={action.payload.user} msg={action.payload.msg} key={state.messages.length} />
+      const newUserMessage = <UserMessage user={payload.user} msg={payload.msg} key={state.messages.length} isMe={payload.isMe} />
       return {
         ...state,
         messages: [
@@ -40,7 +41,7 @@ const roomReducer = (state, action) => {
         ]
       };
     case 'user-enter':
-      let nextUserComponents = action.payload;
+      let nextUserComponents = payload;
       return {
         ...state,
         users: [
@@ -95,7 +96,6 @@ function KhalaChatRoom() {
     })
   }, []);
   useEffect(() => {
-    console.log('add message');
     let messageContainer = document.querySelector('.khala-chat-redirection')
     messageContainer.scrollTop = messageContainer.scrollHeight;
   }, [roomState.messages])
@@ -137,15 +137,18 @@ function ChatArea() {
     if(msg.trim().length <= 0) return;
     SendUserMessage(msg)
   }
+
+  // 서버쪽으로 메세지 보내기
   const SendUserMessage = (msg) => {
     socket.emit('send:user-message', msg);
     formRef.current.reset();
   }
   useEffect(() => {
     formRef.current.text.focus();
+    // 서버측에서 오는 메세지 핸들러
     socket.on('response:user-message', (user, msg) => {
-      console.log(user, msg);
-      dispatch({ type: 'user-message', payload: {user, msg} })
+      const isMe = user.session === socket.id;
+      dispatch({ type: 'user-message', payload: {user, msg, isMe} })
     })
   }, [])
   const HandleKeyDown = (e) => {
