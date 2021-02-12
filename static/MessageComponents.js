@@ -42,7 +42,7 @@ export function UserMessage({user, msg, isMe}) {
       return (
         <li class="khala-redirection-item">
           <span class="item-avatar">
-            <img src="/image/avatar/avatar04.jpg" />
+            <ChatItemAvatar />
           </span>
           <h6 class="item-username">{user.nickname}</h6>
           <div class="item-contents">

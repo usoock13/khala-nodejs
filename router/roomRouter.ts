@@ -96,7 +96,8 @@ const RoomSocket = (io: any) => {
                 // 방에 접속한 유저들이 사용하는 언어들의 목록을 반환하는 메서드 > GetLanguageTypes
                 const targetLanguages = room.GetLanguageTypes();
                 
-                let translatedMsg: unknown = await Translate(user, msg, targetLanguages);
+                // 각  
+                let translatedMsg: any = await Translate(user, msg, targetLanguages);
                 console.log(translatedMsg);
 
                 // 전송할 데이터의 Payload. 원래의 메세지와 유저, 번역된 메세지(들)와 대상 언어(들)가 탑재.
@@ -104,6 +105,7 @@ const RoomSocket = (io: any) => {
                     orgMsg: msg,
                     orgUser: user,
                     targetLanguages: targetLanguages,
+                    translatedMessages: translatedMsg
                 }
                 
                 // 같은 방에 있는 사용자에게 메세지 전송
@@ -115,13 +117,14 @@ const RoomSocket = (io: any) => {
     })
 }
 
-async function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
-    let returnData: any = [];
-    await new Promise((resolve) => {
+function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
+    return new Promise(async (resolve) => {
         let array: any = [];
         if(!isDeadPapago){
-            langTypes.forEach(async lang => {
-                if (lang !== orgUser.language){
+            for(const lang of langTypes){
+                console.log(lang);
+                // 메세지를 보낸 사용자의 언어로는 번역하지 않음
+                if (lang !== orgUser.language) {
                     const params = {
                         sourceLang: orgUser.language,
                         targetLang: lang,
@@ -131,15 +134,12 @@ async function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>
                     .then((res: any) => {
                         const result = JSON.parse(res).message.result;
                         array.push({ type: result.tarLangType, msg: result.translatedText });
-                        resolve({ type: result.tarLangType, msg: result.translatedText });
                     });
                 }
-            })
+            }
         }
-    }).then(res => {
-        returnData.push(res);
+        resolve(array);
     })
-    return returnData;
 }
 
 // 번역 REST API 통신

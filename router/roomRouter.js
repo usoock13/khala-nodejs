@@ -147,6 +147,7 @@ var RoomSocket = function (io) {
                             orgMsg: msg,
                             orgUser: user,
                             targetLanguages: targetLanguages,
+                            translatedMessages: translatedMsg
                         };
                         // 같은 방에 있는 사용자에게 메세지 전송
                         rs.to(room.roomNumber).emit('response:user-message', user, msg);
@@ -161,50 +162,43 @@ var RoomSocket = function (io) {
     });
 };
 function Translate(orgUser, orgMsg, langTypes) {
-    return __awaiter(this, void 0, void 0, function () {
-        var returnData;
-        var _this = this;
+    var _this = this;
+    return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+        var array, _i, langTypes_1, lang, params;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    returnData = [];
-                    return [4 /*yield*/, new Promise(function (resolve) {
-                            var array = [];
-                            if (!isDeadPapago) {
-                                langTypes.forEach(function (lang) { return __awaiter(_this, void 0, void 0, function () {
-                                    var params;
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0:
-                                                if (!(lang !== orgUser.language)) return [3 /*break*/, 2];
-                                                params = {
-                                                    sourceLang: orgUser.language,
-                                                    targetLang: lang,
-                                                    query: orgMsg
-                                                };
-                                                return [4 /*yield*/, papago_js_1.Papago(params)
-                                                        .then(function (res) {
-                                                        var result = JSON.parse(res).message.result;
-                                                        array.push({ type: result.tarLangType, msg: result.translatedText });
-                                                        resolve({ type: result.tarLangType, msg: result.translatedText });
-                                                    })];
-                                            case 1:
-                                                _a.sent();
-                                                _a.label = 2;
-                                            case 2: return [2 /*return*/];
-                                        }
-                                    });
-                                }); });
-                            }
-                        }).then(function (res) {
-                            returnData.push(res);
-                        })];
+                    array = [];
+                    if (!!isDeadPapago) return [3 /*break*/, 4];
+                    _i = 0, langTypes_1 = langTypes;
+                    _a.label = 1;
                 case 1:
+                    if (!(_i < langTypes_1.length)) return [3 /*break*/, 4];
+                    lang = langTypes_1[_i];
+                    console.log(lang);
+                    if (!(lang !== orgUser.language)) return [3 /*break*/, 3];
+                    params = {
+                        sourceLang: orgUser.language,
+                        targetLang: lang,
+                        query: orgMsg
+                    };
+                    return [4 /*yield*/, papago_js_1.Papago(params)
+                            .then(function (res) {
+                            var result = JSON.parse(res).message.result;
+                            array.push({ type: result.tarLangType, msg: result.translatedText });
+                        })];
+                case 2:
                     _a.sent();
-                    return [2 /*return*/, returnData];
+                    _a.label = 3;
+                case 3:
+                    _i++;
+                    return [3 /*break*/, 1];
+                case 4:
+                    resolve(array);
+                    return [2 /*return*/];
             }
         });
-    });
+    }); });
 }
 // 번역 REST API 통신
 function PapagoNow(params) {
