@@ -109,7 +109,7 @@ const RoomSocket = (io: any) => {
                 }
                 
                 // 같은 방에 있는 사용자에게 메세지 전송
-                rs.to(room.roomNumber).emit('response:user-message', user, msg);
+                rs.to(room.roomNumber).emit('response:user-message', user, payload);
             } else {
                 console.error('This user is who? Not found this man.');
             }

@@ -8,48 +8,11 @@ import SERVER_CONFIG from '../server-config.json';
 
 import { getCookie, getParam } from './GetParams';
 import LoadingIcon from './LoadingIcon';
-import { SystemMessage, UserMessage } from './MessageComponents';
-import { UserItem } from './UserComponent'
+import { UserItem } from './UserComponent';
+import { roomReducer } from './RoomReducer';
 const socket = io(`ws://${SERVER_CONFIG.url}/room`);
 
 const RoomContext = React.createContext();
-
-const roomReducer = (state, action) => {
-  const payload = action.payload;
-  switch(action.type){
-    case 'load':
-      return {
-        ...state,
-        isLoading: true
-      }
-    case 'system-message':
-      const newSystemMessage = <SystemMessage user={payload.user} msg={payload.msg} key={state.messages.length} />;
-      return {
-        ...state,
-        messages: [
-          ...state.messages,
-          newSystemMessage
-        ]
-      };
-    case 'user-message':
-      const newUserMessage = <UserMessage user={payload.user} msg={payload.msg} key={state.messages.length} isMe={payload.isMe} />
-      return {
-        ...state,
-        messages: [
-          ...state.messages,
-          newUserMessage
-        ]
-      };
-    case 'user-enter':
-      let nextUserComponents = payload;
-      return {
-        ...state,
-        users: [
-          nextUserComponents
-        ]
-      }
-  }
-}
 
 function KhalaChatRoom() {
   const [roomState, dispatch] = useReducer(roomReducer, {
@@ -146,9 +109,16 @@ function ChatArea() {
   useEffect(() => {
     formRef.current.text.focus();
     // 서버측에서 오는 메세지 핸들러
-    socket.on('response:user-message', (user, msg) => {
+    socket.on('response:user-message', (user, params) => {
       const isMe = user.session === socket.id;
-      dispatch({ type: 'user-message', payload: {user, msg, isMe} })
+      const userConfig = JSON.parse(getCookie('khala-config'));
+      const payload = {
+        ...params,
+        userConfig,
+        isMe,
+      }
+      console.log(payload);
+      dispatch({ type: 'user-message', payload })
     })
   }, [])
   const HandleKeyDown = (e) => {

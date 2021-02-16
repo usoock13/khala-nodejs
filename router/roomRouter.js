@@ -150,7 +150,7 @@ var RoomSocket = function (io) {
                             translatedMessages: translatedMsg
                         };
                         // 같은 방에 있는 사용자에게 메세지 전송
-                        rs.to(room.roomNumber).emit('response:user-message', user, msg);
+                        rs.to(room.roomNumber).emit('response:user-message', user, payload);
                         return [3 /*break*/, 3];
                     case 2:
                         console.error('This user is who? Not found this man.');

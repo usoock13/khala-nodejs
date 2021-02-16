@@ -11,9 +11,9 @@ export function SystemMessage({ user, msg }) {
     )
   }
   
-export function UserMessage({user, msg, isMe}) {
+export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages, userConfig, isMe }) {
     function ChatItemAvatar() {
-      const image = `/image/avatar/avatar0${user.avatar}.jpg`;
+      const image = `/image/avatar/avatar0${orgUser.avatar}.jpg`;
       return (
         <span className="item-avatar">
           <img src={image} />
@@ -22,10 +22,15 @@ export function UserMessage({user, msg, isMe}) {
     }
   
     if (isMe) {
+      let changeBtns;
+      console.log(translatedMessages);
+      translatedMessages.forEash(item => {
+        changeBtns.push(<li className="item-switch-translation-button">KO</li>);
+      })
       return (
         <li className="khala-redirection-item isMe">
           <ChatItemAvatar />
-          <h6 className="item-username">{user.nickname}</h6>
+          <h6 className="item-username">{orgUser.nickname}</h6>
           <div className="item-contents">
             <div className="item-frame">
               <p className="item-text active" data-lang="ko">{msg}</p>
@@ -39,20 +44,23 @@ export function UserMessage({user, msg, isMe}) {
         </li>
       )
     } else {
+      const translatedMsg = translatedMessages.filter(item => item.type === userConfig.language)[0].msg;
+      console.log(userConfig);
+      console.log(translatedMsg);
       return (
-        <li class="khala-redirection-item">
-          <span class="item-avatar">
+        <li className="khala-redirection-item">
+          <span className="item-avatar">
             <ChatItemAvatar />
           </span>
-          <h6 class="item-username">{user.nickname}</h6>
-          <div class="item-contents">
-            <div class="item-frame">
-              <p class="item-text active">{msg}</p>
-              <p class="item-text origin">Temporary.</p>
+          <h6 className="item-username">{orgUser.nickname}</h6>
+          <div className="item-contents">
+            <div className="item-frame">
+              <p className="item-text active">{translatedMsg}</p>
+              <p className="item-text origin">Temporary.</p>
             </div>
-            <div class="item-switch-wrap">
-              <div class="item-switch-origin">
-                <i class="fas fa-sync-alt"></i> 
+            <div className="item-switch-wrap">
+              <div className="item-switch-origin">
+                <i className="fas fa-sync-alt"></i> 
               </div>
             </div>
           </div>
