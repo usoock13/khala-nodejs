@@ -21,11 +21,19 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
       )
     }
   
+    function ChangeButton({ type }) {
+      return <li className="item-switch-translation-button">{type}</li>
+    }
+    function TextItem({ type, msg }) {
+      return <p className="item-text" data-lang={type}>{msg}</p>
+    }
     if (isMe) {
-      let changeBtns;
+      let changeBtns = [];
+      let textItems = [];
       console.log(translatedMessages);
-      translatedMessages.forEash(item => {
-        changeBtns.push(<li className="item-switch-translation-button">KO</li>);
+      translatedMessages.forEach((item, index) => {
+        changeBtns.push(<ChangeButton type={item.type} />);
+        textItems.push(<TextItem type={item.type} msg={item.msg} />)
       })
       return (
         <li className="khala-redirection-item isMe">
@@ -37,7 +45,7 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
             </div>
             <div className="item-switch-wrap">
               <ul className="item-switch-translation">
-                <li className="item-switch-translation-button">KO</li>
+                {changeBtns}
               </ul>
             </div>
           </div>
