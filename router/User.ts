@@ -12,11 +12,11 @@ export class User {
 
     static allUsers: User[] = new Array<User>();
 
-    constructor(config: UserConfig){
-        this.nickname = config.nickname;
-        this.language = config.language;
-        this.avatar = config.avatar;
-        this.session = config.session;
+    constructor(config?: UserConfig){
+        this.nickname = config && config.nickname || '';
+        this.language = config && config.language || '';
+        this.avatar = config && config.avatar || -1;
+        this.session = config && config.session || '';
 
         User.allUsers.push(this);
     }

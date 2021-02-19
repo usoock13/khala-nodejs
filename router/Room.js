@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Room = void 0;
+var User_js_1 = require("./User.js");
 var Room = /** @class */ (function () {
     function Room() {
         this.users = new Array();
+        this.lastChatUser = new User_js_1.User();
         var number;
         do {
             number = Math.random();

@@ -94,6 +94,7 @@ var RoomSocket = function (io) {
             // 방 번호로 검색한 결과, 해당하는 방이 있을 경우
             if (targetRoom) {
                 targetRoom.AddUser(new User_js_1.User(userConfig));
+                targetRoom.lastChatUser = new User_js_1.User();
                 rs.to(targetRoom.roomNumber).emit('user:enter', targetRoom.users, userConfig);
                 roomsWatingForDestroy.forEach(function (item) {
                     if (item.roomNumber === targetRoom.roomNumber)
@@ -147,9 +148,12 @@ var RoomSocket = function (io) {
                             orgMsg: msg,
                             orgUser: user,
                             targetLanguages: targetLanguages,
-                            translatedMessages: translatedMsg
+                            translatedMessages: translatedMsg,
+                            isSuccessive: room.lastChatUser.session === user.session
                         };
                         // 같은 방에 있는 사용자에게 메세지 전송
+                        console.log(payload.isSuccessive);
+                        room.lastChatUser = user;
                         rs.to(room.roomNumber).emit('response:user-message', user, payload);
                         return [3 /*break*/, 3];
                     case 2:

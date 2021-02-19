@@ -1,17 +1,19 @@
 import React from 'react';
 
 export function SystemMessage({ user, msg }) {
-    return (
-      <li className="khala-redirection-system">
-        <h6>System</h6>
-        <div>
-          <p>{msg}{user.nickname}</p>
-        </div>
-      </li>
-    )
-  }
-  
-export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages, userConfig, isMe }) {
+  return (
+    <li className="khala-redirection-system">
+      <h6>System</h6>
+      <div>
+        <p>{msg}{user.nickname}</p>
+      </div>
+    </li>
+  )
+}
+
+export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages, userConfig, isMe, isSuccessive }) {
+    const SUCCESSIVE_CLASS = "successive";
+
     function ChatItemAvatar() {
       const image = `/image/avatar/avatar0${orgUser.avatar}.jpg`;
       return (
@@ -36,7 +38,7 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
         textItems.push(<TextItem type={item.type} msg={item.msg} />)
       })
       return (
-        <li className="khala-redirection-item isMe">
+        <li className={`khala-redirection-item isMe${isSuccessive ? " "+SUCCESSIVE_CLASS : ""}`}>
           <ChatItemAvatar />
           <h6 className="item-username">{orgUser.nickname}</h6>
           <div className="item-contents">
@@ -56,7 +58,7 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
       console.log(userConfig);
       console.log(translatedMsg);
       return (
-        <li className="khala-redirection-item">
+        <li className={`khala-redirection-item${isSuccessive ? " "+SUCCESSIVE_CLASS : ""}`}>
           <span className="item-avatar">
             <ChatItemAvatar />
           </span>

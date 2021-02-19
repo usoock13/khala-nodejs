@@ -25,6 +25,7 @@ export const roomReducer = (state, action) => {
                                   targetLanguages={payload.targetLanguages}
                                   translatedMessages={payload.translatedMessages}
                                   userConfig={payload.userConfig}
+                                  isSuccessive={payload.isSuccessive}
                                   key={state.messages.length}
                                   isMe={payload.isMe} 
                                 />

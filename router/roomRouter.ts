@@ -52,6 +52,7 @@ const RoomSocket = (io: any) => {
             // 방 번호로 검색한 결과, 해당하는 방이 있을 경우
             if(targetRoom){
                 targetRoom.AddUser(new User(userConfig));
+                targetRoom.lastChatUser = new User();
                 rs.to(targetRoom.roomNumber).emit('user:enter', targetRoom.users, userConfig);
                 roomsWatingForDestroy.forEach(item => {
                     if (item.roomNumber === targetRoom.roomNumber) clearTimeout(item.timeout)
@@ -105,10 +106,13 @@ const RoomSocket = (io: any) => {
                     orgMsg: msg,
                     orgUser: user,
                     targetLanguages: targetLanguages,
-                    translatedMessages: translatedMsg
+                    translatedMessages: translatedMsg,
+                    isSuccessive: room.lastChatUser.session === user.session
                 }
                 
                 // 같은 방에 있는 사용자에게 메세지 전송
+                console.log(payload.isSuccessive);
+                room.lastChatUser = user;
                 rs.to(room.roomNumber).emit('response:user-message', user, payload);
             } else {
                 console.error('This user is who? Not found this man.');

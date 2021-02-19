@@ -4,6 +4,7 @@ export class Room {
     public roomNumber: string;
     public users: User[] = new Array<User>();
     static rooms: Room[] = new Array<Room>();
+    public lastChatUser: User = new User();
 
     constructor() {
         let number: number;
