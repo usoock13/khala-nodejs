@@ -173,7 +173,7 @@ function Translate(orgUser, orgMsg, langTypes) {
             switch (_a.label) {
                 case 0:
                     array = [];
-                    if (!!isDeadPapago) return [3 /*break*/, 4];
+                    if (!!isDeadPapago) return [3 /*break*/, 5];
                     _i = 0, langTypes_1 = langTypes;
                     _a.label = 1;
                 case 1:
@@ -190,6 +190,11 @@ function Translate(orgUser, orgMsg, langTypes) {
                             .then(function (res) {
                             var result = JSON.parse(res).message.result;
                             array.push({ type: result.tarLangType, msg: result.translatedText });
+                        })
+                            .catch(function (err) {
+                            console.error(err);
+                            isDeadPapago = true;
+                            Translate(orgUser, orgMsg, langTypes);
                         })];
                 case 2:
                     _a.sent();
@@ -197,7 +202,8 @@ function Translate(orgUser, orgMsg, langTypes) {
                 case 3:
                     _i++;
                     return [3 /*break*/, 1];
-                case 4:
+                case 4: return [3 /*break*/, 5];
+                case 5:
                     resolve(array);
                     return [2 /*return*/];
             }

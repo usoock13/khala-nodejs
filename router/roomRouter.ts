@@ -138,9 +138,16 @@ function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
                     .then((res: any) => {
                         const result = JSON.parse(res).message.result;
                         array.push({ type: result.tarLangType, msg: result.translatedText });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        isDeadPapago = true;
+                        Translate(orgUser, orgMsg, langTypes);
                     });
                 }
             }
+        } else { // PAPAGO NOW AREA!
+
         }
         resolve(array);
     })

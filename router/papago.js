@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Papago = void 0;
 var client_id = '4E43bHF19CmNyDd74lrv';
-var client_secret = process.env.PAPAGO;
+// var client_secret = process.env.PAPAGO;
+var client_secret = "temtemporary";
 var Papago = function (_a) {
     var sourceLang = _a.sourceLang, targetLang = _a.targetLang, query = _a.query;
     var request = require('request');
@@ -26,7 +27,7 @@ var Papago = function (_a) {
             }
             else {
                 console.error("error = " + res.statusCode);
-                console.error(res.body);
+                resolve(new Error("Papago was dead..."));
             }
         });
     });

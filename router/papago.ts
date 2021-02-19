@@ -1,5 +1,6 @@
 var client_id = '4E43bHF19CmNyDd74lrv';
-var client_secret = process.env.PAPAGO;
+// var client_secret = process.env.PAPAGO;
+var client_secret = "temtemporary";
 
 interface papagoProps {
     sourceLang: string,
@@ -27,7 +28,7 @@ export const Papago = ({ sourceLang, targetLang, query }: papagoProps) => {
                 resolve(res.body);
             } else {
                 console.error(`error = ${res.statusCode}`);
-                console.error(res.body);
+                resolve(new Error("Papago was dead..."));
             }
         })
     })
