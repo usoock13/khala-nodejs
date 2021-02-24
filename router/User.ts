@@ -15,7 +15,7 @@ export class User {
     constructor(config?: UserConfig){
         this.nickname = config && config.nickname || '';
         this.language = config && config.language || '';
-        this.avatar = config && config.avatar || -1;
+        this.avatar = config && config.avatar || 0;
         this.session = config && config.session || '';
 
         User.allUsers.push(this);

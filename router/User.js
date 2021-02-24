@@ -5,7 +5,7 @@ var User = /** @class */ (function () {
     function User(config) {
         this.nickname = config && config.nickname || '';
         this.language = config && config.language || '';
-        this.avatar = config && config.avatar || -1;
+        this.avatar = config && config.avatar || 0;
         this.session = config && config.session || '';
         User.allUsers.push(this);
     }

@@ -32,7 +32,6 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
     if (isMe) {
       let changeBtns = [];
       let textItems = [];
-      console.log(translatedMessages);
       translatedMessages.forEach((item, index) => {
         changeBtns.push(<ChangeButton type={item.type} />);
         textItems.push(<TextItem type={item.type} msg={item.msg} />)
@@ -54,9 +53,9 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
         </li>
       )
     } else {
-      const translatedMsg = translatedMessages.filter(item => item.type === userConfig.language)[0].msg;
+      const translatedMsg = translatedMessages.filter(item => item.type === userConfig.language)[0];
       console.log(userConfig);
-      console.log(translatedMsg);
+      console.log(translatedMessages);
       return (
         <li className={`khala-redirection-item${isSuccessive ? " "+SUCCESSIVE_CLASS : ""}`}>
           <span className="item-avatar">

@@ -2,9 +2,10 @@ import express from 'express';
 const router = express.Router();
 const request = require('request');
 
-import { User, UserConfig } from './User.js';
-import { Room } from './Room.js';
-import { Papago } from './papago.js';
+import { User, UserConfig } from './User';
+import { Room } from './Room';
+import { Papago } from './papago';
+import { PapagoNow } from './papago-now';
 
 let isDeadPapago = false;
 
@@ -99,7 +100,7 @@ const RoomSocket = (io: any) => {
                 
                 // 각  
                 let translatedMsg: any = await Translate(user, msg, targetLanguages);
-                console.log(translatedMsg);
+                console.log("콘솔로그대다 ",translatedMsg);
 
                 // 전송할 데이터의 Payload. 원래의 메세지와 유저, 번역된 메세지(들)와 대상 언어(들)가 탑재.
                 const payload = {
@@ -124,36 +125,52 @@ const RoomSocket = (io: any) => {
 function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
     return new Promise(async (resolve) => {
         let array: any = [];
-        if(!isDeadPapago){
-            for(const lang of langTypes){
-                console.log(lang);
-                // 메세지를 보낸 사용자의 언어로는 번역하지 않음
-                if (lang !== orgUser.language) {
-                    const params = {
-                        sourceLang: orgUser.language,
-                        targetLang: lang,
-                        query: orgMsg
+        for(const lang of langTypes){
+            if (lang !== orgUser.language) {
+                if(!isDeadPapago){
+                    if (lang !== orgUser.language) {
+                        const params = {
+                            sourceLang: orgUser.language,
+                            targetLang: lang,
+                            query: orgMsg
+                        }
+                        await Papago(params)
+                        .then((res: any) => {
+                            const parsingRes = JSON.parse(res).message.result;
+                            array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            isDeadPapago = true;
+                            (async () => {
+                                await PapagoNow().init();
+                            })();
+                        });
                     }
-                    await Papago(params)
-                    .then((res: any) => {
-                        const result = JSON.parse(res).message.result;
-                        array.push({ type: result.tarLangType, msg: result.translatedText });
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        isDeadPapago = true;
-                        Translate(orgUser, orgMsg, langTypes);
-                    });
+                } else {
+                    for(const lang of langTypes){
+                        if(lang !== orgUser.language) {
+                            const params = {
+                                so: orgUser.language,
+                                ta: lang,
+                                text: orgMsg
+                            }
+                            await PapagoNow().translate(params)
+                            .then((res : any) => {
+                                const parsingRes = JSON.parse(res);
+                                array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
+                            })
+                        }
+                    }
                 }
             }
-        } else { // PAPAGO NOW AREA!
-
         }
         resolve(array);
     })
 }
 
 // 번역 REST API 통신
+/* 
 function PapagoNow(params: any){
     request.post({
         headers: {
@@ -174,6 +191,7 @@ function PapagoNow(params: any){
         console.log("body : " + body)
     })
 }
+*/
 
 module.exports = {
     router: router,

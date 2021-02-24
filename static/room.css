@@ -310,12 +310,13 @@
 }
 .khala-redirection-item .item-frame {
     /* transition: width 400ms ease; */
+    min-height: 35px;
     position: relative;
     padding: 1rem 1.4rem;
-
     text-align: left;
     background-color: rgba(246, 246, 246, 1);
     box-shadow: .2rem 0 .3rem rgba(0, 0, 0, .15);
+    box-sizing: border-box;
     border-radius: .5rem;
     float: left;
     z-index: 2;

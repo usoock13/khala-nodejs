@@ -53,12 +53,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var request = require('request');
-var User_js_1 = require("./User.js");
-var Room_js_1 = require("./Room.js");
-var papago_js_1 = require("./papago.js");
+var User_1 = require("./User");
+var Room_1 = require("./Room");
+var papago_1 = require("./papago");
+var papago_now_1 = require("./papago-now");
 var isDeadPapago = false;
 function CreateRoom() {
-    var myRoom = new Room_js_1.Room();
+    var myRoom = new Room_1.Room();
     // 생성된 방의 roomNumber를 반환
     // 대입된 roomNumber를 반환
     return myRoom.GetRoomNumber();
@@ -89,12 +90,12 @@ var RoomSocket = function (io) {
                 return;
             var userConfig = __assign(__assign({}, JSON.parse(JSON.parse(data).userConfig)), { session: socket.id });
             // 사용자가 보낸 방 번호(url의 parameter)로 방을 검색
-            var targetRoom = Room_js_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
+            var targetRoom = Room_1.Room.GetRoomForRoomNumber(JSON.parse(data).roomNumber);
             socket.join(JSON.parse(data).roomNumber);
             // 방 번호로 검색한 결과, 해당하는 방이 있을 경우
             if (targetRoom) {
-                targetRoom.AddUser(new User_js_1.User(userConfig));
-                targetRoom.lastChatUser = new User_js_1.User();
+                targetRoom.AddUser(new User_1.User(userConfig));
+                targetRoom.lastChatUser = new User_1.User();
                 rs.to(targetRoom.roomNumber).emit('user:enter', targetRoom.users, userConfig);
                 roomsWatingForDestroy.forEach(function (item) {
                     if (item.roomNumber === targetRoom.roomNumber)
@@ -108,8 +109,8 @@ var RoomSocket = function (io) {
         });
         // 사용자 연결 끊김 이벤트 핸들러 >>
         socket.on('disconnect', function () {
-            var exitUser = User_js_1.User.allUsers.filter(function (user) { return user.session === socket.id; })[0];
-            var roomsNumberForRemove = Room_js_1.Room.GetRoomForUser(exitUser);
+            var exitUser = User_1.User.allUsers.filter(function (user) { return user.session === socket.id; })[0];
+            var roomsNumberForRemove = Room_1.Room.GetRoomForUser(exitUser);
             // 방에서 사용자를 제거. 큰일이 있지 않은 이상 반환된 배열의 길이는 1일 것.
             roomsNumberForRemove.forEach(function (room) {
                 // 방에서 exitUser에 해당하는 User를 제거
@@ -124,7 +125,7 @@ var RoomSocket = function (io) {
                     // 잠깐의 지연시간을 가진 뒤 해당 방을 제거
                     var DELAY_TO_DESTROY = 5000;
                     var destroyTimeout = setTimeout(function () {
-                        Room_js_1.Room.RemoveRoom(room.roomNumber);
+                        Room_1.Room.RemoveRoom(room.roomNumber);
                     }, DELAY_TO_DESTROY);
                     roomsWatingForDestroy.push({ timeout: destroyTimeout, roomNumber: room.roomNumber });
                 }
@@ -136,14 +137,14 @@ var RoomSocket = function (io) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        user = User_js_1.User.GetUserForSession(socket.id);
+                        user = User_1.User.GetUserForSession(socket.id);
                         if (!user) return [3 /*break*/, 2];
-                        room = Room_js_1.Room.GetRoomForUser(user)[0];
+                        room = Room_1.Room.GetRoomForUser(user)[0];
                         targetLanguages = room.GetLanguageTypes();
                         return [4 /*yield*/, Translate(user, msg, targetLanguages)];
                     case 1:
                         translatedMsg = _a.sent();
-                        console.log(translatedMsg);
+                        console.log("콘솔로그대다 ", translatedMsg);
                         payload = {
                             orgMsg: msg,
                             orgUser: user,
@@ -168,42 +169,75 @@ var RoomSocket = function (io) {
 function Translate(orgUser, orgMsg, langTypes) {
     var _this = this;
     return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
-        var array, _i, langTypes_1, lang, params;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var array, _i, langTypes_1, lang, params, _a, langTypes_2, lang_1, params;
+        var _this = this;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     array = [];
-                    if (!!isDeadPapago) return [3 /*break*/, 5];
                     _i = 0, langTypes_1 = langTypes;
-                    _a.label = 1;
+                    _b.label = 1;
                 case 1:
-                    if (!(_i < langTypes_1.length)) return [3 /*break*/, 4];
+                    if (!(_i < langTypes_1.length)) return [3 /*break*/, 9];
                     lang = langTypes_1[_i];
-                    console.log(lang);
+                    if (!(lang !== orgUser.language)) return [3 /*break*/, 8];
+                    if (!!isDeadPapago) return [3 /*break*/, 4];
                     if (!(lang !== orgUser.language)) return [3 /*break*/, 3];
                     params = {
                         sourceLang: orgUser.language,
                         targetLang: lang,
                         query: orgMsg
                     };
-                    return [4 /*yield*/, papago_js_1.Papago(params)
+                    return [4 /*yield*/, papago_1.Papago(params)
                             .then(function (res) {
-                            var result = JSON.parse(res).message.result;
-                            array.push({ type: result.tarLangType, msg: result.translatedText });
+                            var parsingRes = JSON.parse(res).message.result;
+                            array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
                         })
                             .catch(function (err) {
                             console.error(err);
                             isDeadPapago = true;
-                            Translate(orgUser, orgMsg, langTypes);
+                            (function () { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, papago_now_1.PapagoNow().init()];
+                                        case 1:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })();
                         })];
                 case 2:
-                    _a.sent();
-                    _a.label = 3;
-                case 3:
+                    _b.sent();
+                    _b.label = 3;
+                case 3: return [3 /*break*/, 8];
+                case 4:
+                    _a = 0, langTypes_2 = langTypes;
+                    _b.label = 5;
+                case 5:
+                    if (!(_a < langTypes_2.length)) return [3 /*break*/, 8];
+                    lang_1 = langTypes_2[_a];
+                    if (!(lang_1 !== orgUser.language)) return [3 /*break*/, 7];
+                    params = {
+                        so: orgUser.language,
+                        ta: lang_1,
+                        text: orgMsg
+                    };
+                    return [4 /*yield*/, papago_now_1.PapagoNow().translate(params)
+                            .then(function (res) {
+                            var parsingRes = JSON.parse(res);
+                            array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
+                        })];
+                case 6:
+                    _b.sent();
+                    _b.label = 7;
+                case 7:
+                    _a++;
+                    return [3 /*break*/, 5];
+                case 8:
                     _i++;
                     return [3 /*break*/, 1];
-                case 4: return [3 /*break*/, 5];
-                case 5:
+                case 9:
                     resolve(array);
                     return [2 /*return*/];
             }
@@ -211,7 +245,8 @@ function Translate(orgUser, orgMsg, langTypes) {
     }); });
 }
 // 번역 REST API 통신
-function PapagoNow(params) {
+/*
+function PapagoNow(params: any){
     request.post({
         headers: {
             "Content-Type": "application/json",
@@ -223,14 +258,15 @@ function PapagoNow(params) {
             "text": params.text
         },
         json: true
-    }, function (error, res, body) {
-        if (error) {
+    }, function(error: any, res: any, body: Body) {
+        if(error){
             console.error(error);
         }
         console.dir("res : " + res);
-        console.log("body : " + body);
-    });
+        console.log("body : " + body)
+    })
 }
+*/
 module.exports = {
     router: router,
     RoomSocket: RoomSocket,
