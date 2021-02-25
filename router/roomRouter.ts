@@ -100,7 +100,6 @@ const RoomSocket = (io: any) => {
                 
                 // 각  
                 let translatedMsg: any = await Translate(user, msg, targetLanguages);
-                console.log("콘솔로그대다 ",translatedMsg);
 
                 // 전송할 데이터의 Payload. 원래의 메세지와 유저, 번역된 메세지(들)와 대상 언어(들)가 탑재.
                 const payload = {
@@ -112,7 +111,6 @@ const RoomSocket = (io: any) => {
                 }
                 
                 // 같은 방에 있는 사용자에게 메세지 전송
-                console.log(payload.isSuccessive);
                 room.lastChatUser = user;
                 rs.to(room.roomNumber).emit('response:user-message', user, payload);
             } else {
@@ -127,41 +125,45 @@ function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
         let array: any = [];
         for(const lang of langTypes){
             if (lang !== orgUser.language) {
+                // Papago REST API가 정상 작동 중일 경우
                 if(!isDeadPapago){
-                    if (lang !== orgUser.language) {
-                        const params = {
-                            sourceLang: orgUser.language,
-                            targetLang: lang,
-                            query: orgMsg
-                        }
-                        await Papago(params)
-                        .then((res: any) => {
-                            const parsingRes = JSON.parse(res).message.result;
-                            array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            isDeadPapago = true;
-                            (async () => {
-                                await PapagoNow().init();
-                            })();
+                    const params = {
+                        sourceLang: orgUser.language,
+                        targetLang: lang,
+                        query: orgMsg
+                    }
+                    // Papago REST API 실행
+                    await Papago(params)
+                    .then((res: any) => {
+                        const parsingRes = JSON.parse(res).message.result;
+                        array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
+                    })
+                    .catch(async err => { // Papago REST API에서 Error 발생
+                        console.error(err);
+                        // Papago REST API의 상태를 비정상으로 지정 (isDeadPapago)
+                        // 이후 REST API 실행 차단 및 대체코드 실행
+                        isDeadPapago = true;
+                        // PapagoNow를 초기화, 이후 대체코드에서는 translate() 메서드만 실행
+                        // (puppeteer 브라우저 실행)
+                        await PapagoNow().init();
+                    });
+                }
+                // Error를 발생시킨 요청도 처리하기 위해 if else가 아닌 if, if로 처리
+                // Papago REST API 상태가 비정상으로 판단되는 경우
+                if(isDeadPapago) {
+                    const params = {
+                        so: orgUser.language,
+                        ta: lang,
+                        text: orgMsg
+                    }
+                    await PapagoNow().translate(params)
+                    .then((res : any) => {
+                        const parsingRes = JSON.parse(res);
+                        array.push({ 
+                            type: parsingRes.tarLangType, 
+                            msg: parsingRes.translatedText 
                         });
-                    }
-                } else {
-                    for(const lang of langTypes){
-                        if(lang !== orgUser.language) {
-                            const params = {
-                                so: orgUser.language,
-                                ta: lang,
-                                text: orgMsg
-                            }
-                            await PapagoNow().translate(params)
-                            .then((res : any) => {
-                                const parsingRes = JSON.parse(res);
-                                array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
-                            })
-                        }
-                    }
+                    })
                 }
             }
         }

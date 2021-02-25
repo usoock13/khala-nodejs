@@ -30,7 +30,7 @@ const translate = async (payload) => {
         console.log("src Language : " + response.srcLangType);
         console.log("target Language : " + response.tarLangType);
         console.log("result : " + response.translatedText);
-        resolve(JSON.stringify({ tarLangType : response.translatedText, translatedText : response.translatedText }));
+        resolve(JSON.stringify({ tarLangType : response.tarLangType, translatedText : response.translatedText }));
         await page.close();
       }
     })

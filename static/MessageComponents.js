@@ -11,7 +11,7 @@ export function SystemMessage({ user, msg }) {
   )
 }
 
-export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages, userConfig, isMe, isSuccessive }) {
+export function UserMessage({ orgUser, orgMsg, targetLanguages, translatedMessages, userConfig, isMe, isSuccessive }) {
     const SUCCESSIVE_CLASS = "successive";
 
     function ChatItemAvatar() {
@@ -23,18 +23,20 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
       )
     }
   
-    function ChangeButton({ type }) {
-      return <li className="item-switch-translation-button">{type}</li>
+    function ChangeButton({ type, HandleClick }) {
+      return <li className="item-switch-translation-button" onClick={HandleClick}>{type}</li>
     }
-    function TextItem({ type, msg }) {
-      return <p className="item-text" data-lang={type}>{msg}</p>
+
+    function HandleChangeButton(e) {
+      console.dir(e);
     }
+    
     if (isMe) {
       let changeBtns = [];
       let textItems = [];
       translatedMessages.forEach((item, index) => {
-        changeBtns.push(<ChangeButton type={item.type} />);
-        textItems.push(<TextItem type={item.type} msg={item.msg} />)
+        changeBtns.push(<ChangeButton type={item.type} HandleClick={HandleChangeButton} key={index} />);
+        textItems.push(<p className="item-text" data-lang={item.type} key={index}>{item.msg}</p>)
       })
       return (
         <li className={`khala-redirection-item isMe${isSuccessive ? " "+SUCCESSIVE_CLASS : ""}`}>
@@ -42,7 +44,8 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
           <h6 className="item-username">{orgUser.nickname}</h6>
           <div className="item-contents">
             <div className="item-frame">
-              <p className="item-text active" data-lang="ko">{msg}</p>
+              <p className="item-text active" data-lang="ko">{orgMsg}</p>
+              {textItems}
             </div>
             <div className="item-switch-wrap">
               <ul className="item-switch-translation">
@@ -53,9 +56,7 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
         </li>
       )
     } else {
-      const translatedMsg = translatedMessages.filter(item => item.type === userConfig.language)[0];
-      console.log(userConfig);
-      console.log(translatedMessages);
+      const translatedMsg = translatedMessages.filter(item => item.type === userConfig.language)[0].msg;
       return (
         <li className={`khala-redirection-item${isSuccessive ? " "+SUCCESSIVE_CLASS : ""}`}>
           <span className="item-avatar">
@@ -65,7 +66,7 @@ export function UserMessage({ orgUser, msg, targetLanguages, translatedMessages,
           <div className="item-contents">
             <div className="item-frame">
               <p className="item-text active">{translatedMsg}</p>
-              <p className="item-text origin">Temporary.</p>
+              <p className="item-text origin">{orgMsg}</p>
             </div>
             <div className="item-switch-wrap">
               <div className="item-switch-origin">

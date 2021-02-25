@@ -123,6 +123,7 @@ textarea {
 
 .fadeOutTop.khala-animate {
   animation: fadeOutTop 600ms forwards;
+  pointer-events: none;
 }
 @keyframes fadeOutTop {
   0% {

@@ -144,7 +144,6 @@ var RoomSocket = function (io) {
                         return [4 /*yield*/, Translate(user, msg, targetLanguages)];
                     case 1:
                         translatedMsg = _a.sent();
-                        console.log("콘솔로그대다 ", translatedMsg);
                         payload = {
                             orgMsg: msg,
                             orgUser: user,
@@ -153,7 +152,6 @@ var RoomSocket = function (io) {
                             isSuccessive: room.lastChatUser.session === user.session
                         };
                         // 같은 방에 있는 사용자에게 메세지 전송
-                        console.log(payload.isSuccessive);
                         room.lastChatUser = user;
                         rs.to(room.roomNumber).emit('response:user-message', user, payload);
                         return [3 /*break*/, 3];
@@ -169,75 +167,75 @@ var RoomSocket = function (io) {
 function Translate(orgUser, orgMsg, langTypes) {
     var _this = this;
     return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
-        var array, _i, langTypes_1, lang, params, _a, langTypes_2, lang_1, params;
+        var array, _i, langTypes_1, lang, params, params;
         var _this = this;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     array = [];
                     _i = 0, langTypes_1 = langTypes;
-                    _b.label = 1;
+                    _a.label = 1;
                 case 1:
-                    if (!(_i < langTypes_1.length)) return [3 /*break*/, 9];
+                    if (!(_i < langTypes_1.length)) return [3 /*break*/, 6];
                     lang = langTypes_1[_i];
-                    if (!(lang !== orgUser.language)) return [3 /*break*/, 8];
-                    if (!!isDeadPapago) return [3 /*break*/, 4];
-                    if (!(lang !== orgUser.language)) return [3 /*break*/, 3];
+                    if (!(lang !== orgUser.language)) return [3 /*break*/, 5];
+                    if (!!isDeadPapago) return [3 /*break*/, 3];
                     params = {
                         sourceLang: orgUser.language,
                         targetLang: lang,
                         query: orgMsg
                     };
+                    // Papago REST API 실행
                     return [4 /*yield*/, papago_1.Papago(params)
                             .then(function (res) {
                             var parsingRes = JSON.parse(res).message.result;
                             array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
                         })
-                            .catch(function (err) {
-                            console.error(err);
-                            isDeadPapago = true;
-                            (function () { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, papago_now_1.PapagoNow().init()];
-                                        case 1:
-                                            _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })();
-                        })];
+                            .catch(function (err) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        console.error(err);
+                                        // Papago REST API의 상태를 비정상으로 지정 (isDeadPapago)
+                                        // 이후 REST API 실행 차단 및 대체코드 실행
+                                        isDeadPapago = true;
+                                        // PapagoNow를 초기화, 이후 대체코드에서는 translate() 메서드만 실행
+                                        // (puppeteer 브라우저 실행)
+                                        return [4 /*yield*/, papago_now_1.PapagoNow().init()];
+                                    case 1:
+                                        // PapagoNow를 초기화, 이후 대체코드에서는 translate() 메서드만 실행
+                                        // (puppeteer 브라우저 실행)
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
                 case 2:
-                    _b.sent();
-                    _b.label = 3;
-                case 3: return [3 /*break*/, 8];
-                case 4:
-                    _a = 0, langTypes_2 = langTypes;
-                    _b.label = 5;
-                case 5:
-                    if (!(_a < langTypes_2.length)) return [3 /*break*/, 8];
-                    lang_1 = langTypes_2[_a];
-                    if (!(lang_1 !== orgUser.language)) return [3 /*break*/, 7];
+                    // Papago REST API 실행
+                    _a.sent();
+                    _a.label = 3;
+                case 3:
+                    if (!isDeadPapago) return [3 /*break*/, 5];
                     params = {
                         so: orgUser.language,
-                        ta: lang_1,
+                        ta: lang,
                         text: orgMsg
                     };
                     return [4 /*yield*/, papago_now_1.PapagoNow().translate(params)
                             .then(function (res) {
                             var parsingRes = JSON.parse(res);
-                            array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
+                            array.push({
+                                type: parsingRes.tarLangType,
+                                msg: parsingRes.translatedText
+                            });
                         })];
-                case 6:
-                    _b.sent();
-                    _b.label = 7;
-                case 7:
-                    _a++;
-                    return [3 /*break*/, 5];
-                case 8:
+                case 4:
+                    _a.sent();
+                    _a.label = 5;
+                case 5:
                     _i++;
                     return [3 /*break*/, 1];
-                case 9:
+                case 6:
                     resolve(array);
                     return [2 /*return*/];
             }

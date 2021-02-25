@@ -19,10 +19,9 @@ export const roomReducer = (state, action) => {
           ]
         };
       case 'user-message':
-        console.log('payload : ', payload);
         const newUserMessage = <UserMessage 
                                   orgUser={payload.orgUser}
-                                  msg={payload.orgMsg}
+                                  orgMsg={payload.orgMsg}
                                   targetLanguages={payload.targetLanguages}
                                   translatedMessages={payload.translatedMessages}
                                   userConfig={payload.userConfig}
