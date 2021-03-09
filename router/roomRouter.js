@@ -67,12 +67,12 @@ function CreateRoom() {
 // /room GET 통신 Router >>
 router.get('/', function (req, res) {
     res.render('room', {
-        name: 'usoock'
+        cookie: req.headers.cookie
     });
 });
 router.post('/', function (req, res) {
     res.render('room', {
-        name: 'usoock'
+        cookie: req.headers.cookie
     });
 });
 var iconv = require('iconv-lite');
@@ -188,6 +188,9 @@ function Translate(orgUser, orgMsg, langTypes) {
                     // Papago REST API 실행
                     return [4 /*yield*/, papago_1.Papago(params)
                             .then(function (res) {
+                            if (res instanceof Error) {
+                                throw (res);
+                            }
                             var parsingRes = JSON.parse(res).message.result;
                             array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
                         })

@@ -26,6 +26,8 @@ const router = {
   createRoom: require('./router/createRoomRouter'),
   setting: require('./router/settingRouter'),
   login: require('./router/loginRouter'),
+  signUp: require('./router/signUpRouter'),
+  guide: require('./router/guideRouter'),
 }
 // 외부에 선언된 roomSocket 메서드를 import. 
 // 인자로 io를 받는 메서드. room의 socket통신을 총괄 담당
@@ -46,6 +48,8 @@ app.use('/room', router.room);
 app.use('/create-room', router.createRoom);
 app.use('/setting', router.setting);
 app.use('/login', router.login);
+app.use('/sign-up', router.signUp);
+app.use('/guide', router.guide);
 
 // import한 RoomSocket을 실행. import단에서,
 //   const RoomSocket = require('./router/room').RoomSocket(io);

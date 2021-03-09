@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 export function SystemMessage({ user, msg }) {
   return (
@@ -13,6 +13,7 @@ export function SystemMessage({ user, msg }) {
 
 export function UserMessage({ orgUser, orgMsg, targetLanguages, translatedMessages, userConfig, isMe, isSuccessive }) {
     const SUCCESSIVE_CLASS = "successive";
+    const textItemsRef = useRef();
 
     function ChatItemAvatar() {
       const image = `/image/avatar/avatar0${orgUser.avatar}.jpg`;
@@ -28,7 +29,20 @@ export function UserMessage({ orgUser, orgMsg, targetLanguages, translatedMessag
     }
 
     function HandleChangeButton(e) {
-      console.dir(e);
+      // 기존 활성화 언어
+      let prevLang;
+      textItemsRef.current.childNodes.forEach(item => {
+        if(item.classList.contains('active')) prevLang = item.dataset.lang.toUpperCase();
+      })
+      // 클릭 후 활성화 언어
+      let targetLang = e.target.innerText;
+      textItemsRef.current.childNodes.forEach(item => {
+        item.classList.remove('active');
+        if(item.dataset.lang.toLowerCase() === targetLang.toLowerCase()) {
+          item.classList.add('active');
+        }
+      })
+      e.target.innerText = prevLang;
     }
     
     if (isMe) {
@@ -43,8 +57,8 @@ export function UserMessage({ orgUser, orgMsg, targetLanguages, translatedMessag
           <ChatItemAvatar />
           <h6 className="item-username">{orgUser.nickname}</h6>
           <div className="item-contents">
-            <div className="item-frame">
-              <p className="item-text active" data-lang="ko">{orgMsg}</p>
+            <div className="item-frame" ref={textItemsRef}>
+              <p className="item-text active" data-lang={orgUser.language}>{orgMsg}</p>
               {textItems}
             </div>
             <div className="item-switch-wrap">

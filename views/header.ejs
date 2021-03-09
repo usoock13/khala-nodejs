@@ -7,26 +7,26 @@
     </span>
     <ul class="sign-buttons">
         <%
-        	if(name){
+        	if(cookie.user){
         %>
-        <li class="greeting">Welcom, <strong><%= name %>!</strong> I always wish your happy~</li>
+        <li class="greeting">Welcom, <strong><%= cookie.user.name %>!</strong> I always wish your happy~</li>
         <li class="logout">
-            <a href="/logoutAction.jsp">Logout</a>
+            <a href="/logoutAction">Logout</a>
         </li>
         <li class="board">
-            <a href="/board-list.jsp">Board</a>
+            <a href="/board-list">Board</a>
         </li>
         <%
         	} else {
         %>
         <li class="sign-up">
-            <a href="/sign-up.jsp">Sign up</a>
+            <a href="/sign-up">Sign up</a>
         </li>
         <li class="login">
-            <a href="/login.jsp">Login</a>
+            <a href="/login">Login</a>
         </li>
         <li class="board">
-            <a href="/board-list.jsp">Board</a>
+            <a href="/board-list">Board</a>
         </li>
         <%
         } 

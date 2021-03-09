@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Papago = void 0;
 var client_id = '4E43bHF19CmNyDd74lrv';
-var client_secret = process.env.PAPAGO;
+// var client_secret = process.env.PAPAGO;
+var client_secret = "temtemporary";
 var Papago = function (_a) {
     var sourceLang = _a.sourceLang, targetLang = _a.targetLang, query = _a.query;
     var request = require('request');
@@ -19,14 +20,14 @@ var Papago = function (_a) {
             'X-Naver-Client-Secret': client_secret
         }
     };
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
         request.post(parameters, function (err, res, body) {
             if (!err && res.statusCode == 200) {
                 resolve(res.body);
             }
             else {
                 console.error("error = " + res.statusCode);
-                reject(new Error("Papago was dead..."));
+                resolve(new Error("Papago was dead..."));
             }
         });
     });

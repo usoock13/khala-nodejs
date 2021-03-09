@@ -20,12 +20,12 @@ function CreateRoom(): string /* 방번호 */ {
 // /room GET 통신 Router >>
 router.get('/', (req: any, res: any) => {
     res.render('room', {
-        name: 'usoock'
+        cookie: req.headers.cookie
     });
 })
 router.post('/', (req: any, res: any) => {
     res.render('room', {
-        name: 'usoock'
+        cookie: req.headers.cookie
     });
 })
 
@@ -135,6 +135,9 @@ function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
                     // Papago REST API 실행
                     await Papago(params)
                     .then((res: any) => {
+                        if(res instanceof Error){
+                            throw(res);
+                        }
                         const parsingRes = JSON.parse(res).message.result;
                         array.push({ type: parsingRes.tarLangType, msg: parsingRes.translatedText });
                     })
@@ -161,7 +164,7 @@ function Translate(orgUser: User, orgMsg: string, langTypes: Array<string>) {
                         const parsingRes = JSON.parse(res);
                         array.push({ 
                             type: parsingRes.tarLangType, 
-                            msg: parsingRes.translatedText 
+                            msg: parsingRes.translatedText
                         });
                     })
                 }
