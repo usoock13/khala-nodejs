@@ -7,7 +7,7 @@
     </span>
     <ul class="sign-buttons">
         <%
-        	if(cookie.user){
+        	if(cookie && cookie.user){
         %>
         <li class="greeting">Welcom, <strong><%= cookie.user.name %>!</strong> I always wish your happy~</li>
         <li class="logout">
@@ -16,7 +16,7 @@
         <li class="board">
             <a href="/board-list">Board</a>
         </li>
-        <%
+        <%   
         	} else {
         %>
         <li class="sign-up">

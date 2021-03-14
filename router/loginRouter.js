@@ -17,7 +17,7 @@ router.post('/', (req, res) => {
             id: req.headers["user-id"],
             password: req.headers["user-password"],
         }
-        DDBLogin(params)
+        DDBLogin(params, res);
     } else {
         console.error('No ID or Password was entered.')
     }

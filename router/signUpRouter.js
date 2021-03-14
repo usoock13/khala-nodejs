@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
         password: req.headers["user-password"],
         nickname: req.headers["user-nickname"],
     }
-    DDBSignUp(params);
+    DDBSignUp(params, res);
 })
 
 module.exports = router;

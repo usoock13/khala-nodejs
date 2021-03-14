@@ -20,20 +20,5 @@
 	</div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-<script>
-    let loginForm = document.querySelector('#khala-loginform');
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'appalication/json',
-                'User-Id': loginForm.id.value,
-				// Password는 암호화 (1차)
-                'User-Password': CryptoJS.HmacSHA512(loginForm.password.value, 'khala'),
-            },
-        })
-    })
-</script>
+<script src="login.js"></script>
 </html>

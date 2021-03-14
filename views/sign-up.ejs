@@ -26,21 +26,5 @@
 	</div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-<script>
-	const signUpForm = document.querySelector('.khala-signupform')
-	signUpForm.addEventListener('submit', (e) => {
-		e.preventDefault();
-		
-		fetch('/sign-up', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'User-Id': signUpForm.id.value,
-				'User-Nickname': signUpForm.nickname.value,
-				// Password는 암호화 (1차)
-				'User-Password': CryptoJS.HmacSHA512(signUpForm.password, 'khala'),
-			}
-		})
-	})
-</script>
+<script src="sign-up.js"></script>
 </html>
