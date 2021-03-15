@@ -104,6 +104,11 @@ exports.DDBSignUp = (data, res) => {
                 console.error(err);
             } else {
                 console.log(data);
+                res.status(200).json({
+                    status: 200,
+                    message: 'user item added',
+                    redirection: '/sign-up/result'
+                })
             }
         })
     } catch(e) {

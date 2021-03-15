@@ -13,7 +13,10 @@ signUpForm.addEventListener('submit', (e) => {
     })
     .then(res => {
         if(res.status !== 200) throw res;
-        res.json().then(json => document.href = json.redirection);
+        res.json().then(json => {
+            console.log(json.redirection);
+            location.href = json.redirection;
+        });
     })
     .catch(err => {
         err.json().then(json => {
