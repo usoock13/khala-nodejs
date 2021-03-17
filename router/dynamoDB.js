@@ -3,6 +3,7 @@ const { param } = require("./loginRouter");
 const dotenv = require('dotenv');
 const crypto = require('crypto');
 const { sendDataToProcessId } = require("pm2");
+const nodemailer = require('nodemailer');
 dotenv.config();
 
 
@@ -39,15 +40,11 @@ exports.DDBLogin = (data, res) => {
             console.error('Password must also contain special characters!');
             throw new Error('Password must also contain special characters!');
         }
-        const hashData = {
-            id: crypto.createHash('sha512').update(process.env['HASH_SALT']).digest(data.id),
-            password: crypto.createHash('sha512').update(process.env['HASH_SALT']).digest(data.password),
-        } // 암호화
         const params = {
             TableName : 'khala-user',
             Item: {
-                'email': hashData.id,
-                'password': hashData.password,
+                'email': data.id,
+                'password': crypto.createHash('sha512').update(process.env['HASH_SALT']).digest(data.password),
             }
         }
     } catch(e) {
@@ -85,25 +82,22 @@ exports.DDBSignUp = (data, res) => {
             console.error('Password must also contain special characters!');
             throw new Error('Password must also contain special characters!');
         }
-        const hashData = {
-            id: data.id,
-            nickname: data.nickname,
-            password: crypto.createHash('sha512').update(process.env['HASH_SALT']).digest(data.password),
-        } // 암호화
+        const authNumber = Math.random().toString(36).substr(2, 11);
         const params = {
             TableName : "khala-user",
             Item: {
-                'email': hashData.id,
-                'password': hashData.password,
-                'nickname': hashData.nickname,
+                'email': data.id,
+                'password': crypto.createHash('sha512').update(process.env['HASH_SALT']).digest(data.password),
+                'nickname': data.nickname,
+                'authNumber': authNumber,
                 'hadConfirmed': false
             }
         }
-        docClient.put(params, (err, data) => {
+        docClient.put(params, (err, result) => {
             if (err) {
                 console.error(err);
             } else {
-                console.log(data);
+                SendMail(data.id, { authNumber })
                 res.status(200).json({
                     status: 200,
                     message: 'user item added',
@@ -118,4 +112,26 @@ exports.DDBSignUp = (data, res) => {
             message: e.message,
         });
     }
+}
+
+const SendMail = async (email, params) => {
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.NODEMAILER_USER,
+            pass: process.env.NODEMAILER_PASS
+        }
+    })
+    let info = await transporter.sendMail({
+        from: `"KHALA" <${process.env.NODEMAILER_USER}>`,
+        to: email,
+        subject: "KHALA Auth Mail - Hello ~?",
+        text: '',
+        html: `
+            <h1>${params.authNumber}</h1>
+        `
+    })
 }
