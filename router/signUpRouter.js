@@ -5,6 +5,9 @@ const { DDBSignUp } = require('./dynamoDB');
 router.get('/', (req, res) => {
     res.render('sign-up.ejs', { cookie : req.headers.cookie });
 })
+router.get('/result', (req, res) => {
+    res.render('sign-up-result.ejs', { cookie : req.headers.cookie });
+})
 
 router.post('/', (req, res) => {
     const params = {
@@ -15,4 +18,5 @@ router.post('/', (req, res) => {
     DDBSignUp(params, res);
 })
 
+// module.exports = router;
 module.exports = router;

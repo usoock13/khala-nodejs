@@ -30,10 +30,11 @@ const router = {
   guide: require('./router/guideRouter'),
 }
 // 외부에 선언된 roomSocket 메서드를 import. 
-// 인자로 io를 받는 메서드. room의 socket통신을 총괄 담당
+// 인자로 io를 받는 메서드. room의 socket통신을 총괄 담
 const { RoomSocket } = require('./router/roomRouter');
 
 app.use(express.static(__dirname + '/static'));
+app.use('/sign-up', express.static(__dirname + '/static'));
 app.use(session);
 app.use(bodyParser.urlencoded({
   extended: false
@@ -57,5 +58,5 @@ app.use('/guide', router.guide);
 RoomSocket(io);
 
 server.listen(PORT_NUMBER, () => {
-  console.log(`[Firebase-Project for Express] app started on port ${PORT_NUMBER}`);
+  console.log(`[Express] app started on port ${PORT_NUMBER}`);
 })

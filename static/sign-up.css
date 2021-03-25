@@ -35,6 +35,9 @@ body {
     box-shadow: 0 0 0.5rem rgba(66, 66, 66, .4);
     border-radius: .7rem;
 }
+.confirm .khala-signupform input[type="text"] {
+    width: 20rem;
+}
 .khala-signupform .khala-signup-cancle,
 .khala-signupform input[type="submit"] {
     transition: background-size 250ms ease,
@@ -66,6 +69,17 @@ body {
     background-position: 50% 0;
     animation: bounce 400ms ease forwards;
     opacity: 1;
+}
+.khala-signupform .khala-signupform-confirm[type="submit"] {
+    width: 17rem;
+    border-radius: 2.1rem;
+}
+.khala-signupform-authentication::placeholder {
+    color: rgba(0, 0, 0, .23);
+}
+.khala-remail {
+    color: var(--khala-point-color);
+    font-size: 1.3rem;
 }
 
 

@@ -131,6 +131,11 @@ const SendMail = async (email, params) => {
         subject: "KHALA Auth Mail - Hello ~?",
         text: '',
         html: `
+            <h3>Thank you for join us!</h3>
+            <p>
+                I'm so happy to be with you! <br>
+                Below is the code required for authentication.
+            </p>
             <h1>${params.authNumber}</h1>
         `
     })
