@@ -83,27 +83,40 @@ exports.DDBSignUp = (data, res) => {
             throw new Error('Password must also contain special characters!');
         }
         const authNumber = Math.random().toString(36).substr(2, 11);
-        const params = {
-            TableName : "khala-user",
-            Item: {
-                'email': data.id,
-                'password': crypto.createHash('sha512').update(process.env['HASH_SALT']).digest(data.password),
-                'nickname': data.nickname,
-                'authNumber': authNumber,
-                'hadConfirmed': false
+        crypto.pbkdf2(data.password, process.env['HASH_SALT'], 1, 32, 'sha512', (err, derivedKey) => {
+            const params = {
+                TableName : "khala-user",
+                Item: {
+                    'email': data.id,
+                    'password': derivedKey,
+                    'nickname': data.nickname,
+                    'authNumber': authNumber,
+                    'hadConfirmed': false,
+                    'joinDate': (new Date()).toString()
+                }
             }
-        }
-        docClient.put(params, (err, result) => {
-            if (err) {
-                console.error(err);
-            } else {
-                SendMail(data.id, { authNumber })
-                res.status(200).json({
-                    status: 200,
-                    message: 'user item added',
-                    redirection: '/sign-up/result'
-                })
-            }
+            QueryUser(data)
+            .then((err, result) => {
+                if(!result) {
+                    docClient.put(params, (err, result) => {
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            // SendMail(data.id, { authNumber })
+                            res.status(200).json({
+                                status: 200,
+                                message: 'user item added',
+                                redirection: '/sign-up/result',
+                            })
+                        }
+                    })
+                } else {
+                    res.status(401).json({
+                        status: 401,
+                        message: e.message,
+                    })
+                }
+            })
         })
     } catch(e) {
         console.dir(e.message);
@@ -112,6 +125,41 @@ exports.DDBSignUp = (data, res) => {
             message: e.message,
         });
     }
+}
+exports.DDBAuthenticate = () => {
+
+}
+
+const QueryUser = (params) => {
+    console.log('id:', params.id);
+    const payload = {
+        TableName: "khala-user",
+        KeyConditionExpression: "#id = :id",
+        ExpressionAttributeNames: {
+            "#id": "email"
+        },
+        ExpressionAttributeValues: {
+            ":id": params.id
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        docClient.query(payload, (err, data) => {
+           if(err) {
+               const result = {
+
+               }
+            resolve(err);
+           } else {
+               console.dir('Query Succeeded');
+               let items = [];
+               data.Items.forEach(item => {
+                   items.push(item)
+               })
+               resolve(items);
+           }
+       });
+    })
 }
 
 const SendMail = async (email, params) => {

@@ -17,6 +17,12 @@ router.post('/', (req, res) => {
     }
     DDBSignUp(params, res);
 })
+router.post('/result', (req, res) => {
+    const params = {
+        code: req.headers["authentication-code"]
+    }
+    res.json({ content:"i dont care" });
+    // DDBAuthenticate(params, res);
+})
 
-// module.exports = router;
 module.exports = router;
