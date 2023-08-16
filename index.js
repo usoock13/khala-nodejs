@@ -25,8 +25,6 @@ const router = {
   room: require('./router/roomRouter').router,
   createRoom: require('./router/createRoomRouter'),
   setting: require('./router/settingRouter'),
-  login: require('./router/loginRouter'),
-  signUp: require('./router/signUpRouter'),
   guide: require('./router/guideRouter'),
 }
 // 외부에 선언된 roomSocket 메서드를 import. 
@@ -34,7 +32,6 @@ const router = {
 const { RoomSocket } = require('./router/roomRouter');
 
 app.use(express.static(__dirname + '/static'));
-app.use('/sign-up', express.static(__dirname + '/static'));
 app.use(session);
 app.use(bodyParser.urlencoded({
   extended: false
@@ -48,8 +45,6 @@ app.use('/', router.main);
 app.use('/room', router.room);
 app.use('/create-room', router.createRoom);
 app.use('/setting', router.setting);
-app.use('/login', router.login);
-app.use('/sign-up', router.signUp);
 app.use('/guide', router.guide);
 
 // import한 RoomSocket을 실행. import단에서,

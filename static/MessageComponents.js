@@ -14,6 +14,9 @@ export function SystemMessage({ user, msg }) {
 export function UserMessage({ orgUser, orgMsg, targetLanguages, translatedMessages, userConfig, isMe, isSuccessive }) {
     const SUCCESSIVE_CLASS = "successive";
     const textItemsRef = useRef();
+    
+    const receivedMsgRef = useRef();
+    const originMsgRef = useRef();
 
     function ChatItemAvatar() {
       const image = `/image/avatar/avatar0${orgUser.avatar}.jpg`;
@@ -71,6 +74,15 @@ export function UserMessage({ orgUser, orgMsg, targetLanguages, translatedMessag
       )
     } else {
       const translatedMsg = translatedMessages.filter(item => item.type === userConfig.language)[0].msg;
+      const RevertToOriginBtn = () => {
+        if(receivedMsgRef.current.classList.contains("active")) {
+          receivedMsgRef.current.classList.remove("active");
+          originMsgRef.current.classList.add("active");
+        } else {
+          receivedMsgRef.current.classList.add("active");
+          originMsgRef.current.classList.remove("active");
+        }
+      };
       return (
         <li className={`khala-redirection-item${isSuccessive ? " "+SUCCESSIVE_CLASS : ""}`}>
           <span className="item-avatar">
@@ -79,11 +91,11 @@ export function UserMessage({ orgUser, orgMsg, targetLanguages, translatedMessag
           <h6 className="item-username">{orgUser.nickname}</h6>
           <div className="item-contents">
             <div className="item-frame">
-              <p className="item-text active">{translatedMsg}</p>
-              <p className="item-text origin">{orgMsg}</p>
+              <p className="item-text active" ref={receivedMsgRef}>{translatedMsg}</p>
+              <p className="item-text origin" ref={originMsgRef}>{orgMsg}</p>
             </div>
             <div className="item-switch-wrap">
-              <div className="item-switch-origin">
+              <div className="item-switch-origin" onClick={RevertToOriginBtn}>
                 <i className="fas fa-sync-alt"></i> 
               </div>
             </div>

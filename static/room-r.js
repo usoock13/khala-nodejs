@@ -93,6 +93,7 @@ function UserArea() {
 function ChatArea() {
   let dispatch = useContext(RoomContext).dispatch;
   let formRef = useRef();
+  const urlRef = useRef();
 
   const HandleSubmit = (e) => {
     e.preventDefault();
@@ -107,6 +108,7 @@ function ChatArea() {
     formRef.current.reset();
   }
   useEffect(() => {
+    urlRef.current.textContent = location.href;
     formRef.current.text.focus();
     // 서버측에서 오는 메세지 핸들러
     socket.on('response:user-message', (user, params) => {
@@ -135,8 +137,11 @@ function ChatArea() {
     <section className="khala-chat">
       <div className="khala-chat-header">
         <p className="khala-chat-url">
-          <span>-</span>
-          <button className="khala-urlcopy">copy</button>
+          <span ref={urlRef}>-</span>
+          <button className="khala-urlcopy" onClick={() => {
+            window.navigator.clipboard.writeText(urlRef.current.textContent);
+            alert("Successfully copied!");
+          }}>copy</button>
         </p>
       </div>
       <div className="khala-chat-redirection">

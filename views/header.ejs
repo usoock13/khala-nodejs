@@ -6,30 +6,6 @@
         </a>
     </span>
     <ul class="sign-buttons">
-        <%
-        	if(cookie && cookie.user){
-        %>
-        <li class="greeting">Welcom, <strong><%= cookie.user.name %>!</strong> I always wish your happy~</li>
-        <li class="logout">
-            <a href="/logoutAction">Logout</a>
-        </li>
-        <li class="board">
-            <a href="/board-list">Board</a>
-        </li>
-        <%   
-        	} else {
-        %>
-        <li class="sign-up">
-            <a href="/sign-up">Sign up</a>
-        </li>
-        <li class="login">
-            <a href="/login">Login</a>
-        </li>
-        <li class="board">
-            <a href="/board-list">Board</a>
-        </li>
-        <%
-        } 
-        %>
+        <li class="greeting">I glad to meet you!</li>
     </ul>
 </nav>
